@@ -1,5 +1,6 @@
 
 
+Import-Module "$PSScriptRoot\..\log\verbosely.psm1"
 
 
 FUNCTION Out-Csv {
@@ -16,18 +17,26 @@ FUNCTION Out-Csv {
     )
 
     
-    Write-Host "`n`0Starting $($MyInvocation.MyCommand)`0" -f 'white' -b 'DarkBlue'
+    Write-Start -verbosely:$Verbosely
+    $start_time = get-date
 
+    [hashtable]$state = [ordered]@{}
     try {
         $Value | Export-Csv -Path $Path -Force -NoTypeInformation -ErrorAction 'Stop'
-        if ($Verbosely) { Write-Host "Success`t:`0True" -f 'green'}
-        if ($Verbosely) {Write-Host "Csv`t:`0$Path" -f Green}
+        
+        $state.Success = $true
+        $state.Csv = $Path
+
+        Write-Success -Message $state -verbosely:$Verbosely
     }
     catch {
-        if ($Verbosely) {Write-Host "`Error`t:`0$PSItem " -f Red}    
-        if ($Verbosely) {Write-Host "Csv`t:`0$Path" -f Red}
+        $state.Success = $false
+        $state.Error = $PSItem
+        $state.Csv = $Path
+        Write-fail -Message $state -verbosely:$Verbosely
     }
-
+    write-time -start $start_time -verbosely:$Verbosely
+    write-end -verbosely:$Verbosely
 }
 
 
