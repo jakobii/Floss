@@ -1,4 +1,8 @@
-
+<# this function check if the value param matches the expect param
+ # the value param is left duck typed on purpose. this allows for
+ # the type provided to be out in a log. and prevents the type from 
+ # being converted to a string and giving a false positive.
+ #>
 FUNCTION Assert-String($Value, [string]$Expect, [string]$Tag) {
     
     # Get Type

@@ -1,6 +1,6 @@
 Import-Module @(
     "$PSScriptRoot\..\modules\tsql\Invoke-TSQL.psm1"
-    "$PSScriptRoot\..\modules\exporting\Out-Csv.psm1"
+    "$PSScriptRoot\..\modules\file\Out-Csv.psm1"
 )
 
 
