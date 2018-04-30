@@ -1,4 +1,4 @@
-Import-Module "$PSScriptRoot\New-Row.psm1"
+Import-Module "$PSScriptRoot\..\modules\tsql\New-Row.psm1"
 
 # Dates
 new-row -Column 'long DateTime' -Value $(Get-Date) -Type 'datetime2'

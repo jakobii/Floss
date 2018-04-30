@@ -16,11 +16,12 @@ FUNCTION Out-Csv {
         $Verbosely
     )
 
-    
+    # Log
     Write-Start -verbosely:$Verbosely
     $start_time = get-date
-
     [hashtable]$state = [ordered]@{}
+    
+    # Export
     try {
         $Value | Export-Csv -Path $Path -Force -NoTypeInformation -ErrorAction 'Stop'
         
@@ -35,6 +36,8 @@ FUNCTION Out-Csv {
         $state.Csv = $Path
         Write-fail -Message $state -verbosely:$Verbosely
     }
+
+    # Log
     write-time -start $start_time -verbosely:$Verbosely
     write-end -verbosely:$Verbosely
 }

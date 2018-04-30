@@ -1,6 +1,6 @@
 
 # Import all src Module
-$items = Get-ChildItem "$PSScriptRoot\src" -Recurse
+$items = Get-ChildItem "$PSScriptRoot\..\fmt" -Recurse
 foreach ($item in $items) {
     if ($item.Extension -eq '.psm1') {
         import-module $item.FullName

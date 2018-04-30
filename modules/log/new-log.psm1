@@ -182,15 +182,3 @@ function New-log {
 
 
 
-
-
-function new-blah {
-
-    New-log -type 'start' -OutHost
-
-
-
-}
-
-new-blah
-

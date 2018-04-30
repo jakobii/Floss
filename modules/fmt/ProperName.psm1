@@ -1,9 +1,5 @@
 
 
-
-
-
-
 function format-ProperName($value) {
 
     $eng = [System.Globalization.CultureInfo]::new('en-US')

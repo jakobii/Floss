@@ -1,1 +1,0 @@
-# Tool to make working with sql easier
