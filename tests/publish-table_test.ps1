@@ -15,12 +15,12 @@ $data = Invoke-TSQL @TSQL
 
 
 $pt = @{
-    srv = '' 
-    db  = '' 
-    sch = ''
-    tb  = ''
-    dat = $data
-    v   = $false
+    Server      = '' 
+    Database    = '' 
+    Schema      = ''
+    Table       = ''
+    InputObject = $data
+    Verbosely   = $true
 }
 publish-table @pt
 
