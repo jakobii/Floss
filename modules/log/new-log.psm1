@@ -1,4 +1,4 @@
-
+#beta
 
 
 Import-Module "$PSScriptRoot\..\tsql\invoke-tsql"
@@ -58,10 +58,6 @@ function New-log {
     [string]$HostLog += "end    : $end`n"
     
 
-
-
-
-    Write-Host $HostLog  -f Yellow
 
     if ($OutHost) {
 
