@@ -10,11 +10,11 @@ Import-Module $Modules
 
 Function Publish-Table {
     param(
-        [string]$srv, 
-        [string]$db, 
-        [string]$sch,
-        [string]$tb,
-        $dat,
+        [string]$Server, 
+        [string]$Database, 
+        [string]$Schema,
+        [string]$Table,
+        $InputObject,
         
         [alias('v')]   
         [switch]
@@ -22,28 +22,28 @@ Function Publish-Table {
     )
 
     # Production table Safty net.
-    if ($sch -eq 'pro') {
-        write-fail -verbosely $true -m 'You can not publish to production table. Please choose a different schema.' 
+    if ($Schema -eq 'pro') {
+        write-fail -verbosely $true -m 'You can not publish to production table. Please choose a different Schema.' 
         return
     }
 
     $RemParams = @{
-        srv = $srv 
-        db = $db 
-        sch = $sch 
-        tb = $tb 
-        v = $verbosely   
+        Server = $Server 
+        Database = $Database 
+        Schema = $Schema 
+        Table = $Table 
+        verbosely = $verbosely   
     }
 
     Remove-Table @RemParams
     
     $NewParams = @{
-        srv = $srv 
-        db = $db 
-        sch = $sch 
-        tb = $tb 
-        v = $verbosely   
-        dat = $dat
+        Server = $Server 
+        Database = $Database 
+        Schema = $Schema 
+        Table = $Table 
+        verbosely = $verbosely   
+        InputObject = $InputObject
     }
 
     New-table @NewParams

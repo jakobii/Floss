@@ -4,11 +4,11 @@ Import-Module "$PSScriptRoot\..\log\verbosely.psm1"
 
 function New-table {
     param(
-        [string]$srv, 
-        [string]$db, 
-        [string]$sch,
-        [string]$tb,
-        $dat,
+        [string]$Server, 
+        [string]$Database, 
+        [string]$Schema,
+        [string]$Table,
+        $InputObject,
         
         [alias('v')]   
         [switch]
@@ -17,15 +17,15 @@ function New-table {
     $StartTime = get-date
     write-start -message 'New-table' -verbosely:$verbosely
     $Params = @{}
-    $Params.DatabaseName = $db
-    $Params.SchemaName = $sch
-    $Params.TableName = $tb
-    $Params.ServerInstance = $srv
+    $Params.DatabaseName = $Database
+    $Params.SchemaName = $Schema
+    $Params.TableName = $Table
+    $Params.ServerInstance = $Server
     $Params.force = $true
     $Params.ErrorAction = 'stop'
     write-note -message $Params -verbosely:$verbosely
     
-    $Params.InputData = $dat
+    $Params.InputData = $InputObject
     try {
         Write-SqlTableData @Params
         write-success -message 'Table Created' -verbosely:$verbosely

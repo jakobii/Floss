@@ -5,10 +5,10 @@ Import-Module "$PSScriptRoot\..\log\verbosely.psm1"
 
 function Remove-Table {
     param(
-        [string]$srv, 
-        [string]$db, 
-        [string]$sch,
-        [string]$tb,
+        [string]$Server, 
+        [string]$Database, 
+        [string]$Schema,
+        [string]$Table,
         
         [alias('v')]   
         [switch]
@@ -18,8 +18,8 @@ function Remove-Table {
     $StartTime = get-date
     write-start -message 'Remove-table' -verbosely:$verbosely
     $Params = @{}
-    $Params.Query = "DROP TABLE IF EXISTS [$sch].[$tb]"
-    $Params.ConnectionString = "Server=$srv; Database=$db; Trusted_Connection=Yes; Integrated Security=SSPI;"
+    $Params.Query = "DROP TABLE IF EXISTS [$Schema].[$Table]"
+    $Params.ConnectionString = "Server=$Server; Database=$Database; Trusted_Connection=Yes; Integrated Security=SSPI;"
     $Params.ErrorAction = 'stop'
 
     write-note -message $Params -verbosely:$verbosely
