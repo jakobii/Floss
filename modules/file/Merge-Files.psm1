@@ -14,7 +14,7 @@ FUNCTION Merge-Files ($Path, $Extension, [int]$depth) {
     $GetChildItem.Path = $Path 
     $GetChildItem.Recurse = $true
     if($depth){$GetChildItem.depth = $depth}
-    $ChildItems = Get-ChildItem 
+    $ChildItems = Get-ChildItem @GetChildItem
     
 
     # only keep files
@@ -25,7 +25,7 @@ FUNCTION Merge-Files ($Path, $Extension, [int]$depth) {
         }
     }
     
-    
+
     [array]$LINE_ARRAY = @()
     [array]$FILES = @()
 
