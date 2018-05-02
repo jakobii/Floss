@@ -15,7 +15,7 @@ function New-table {
         $verbosely
     )
     $StartTime = get-date
-    write-start -message 'New-table' -verbosely:$verbosely
+    write-start -verbosely:$verbosely
     $Params = @{}
     $Params.DatabaseName = $Database
     $Params.SchemaName = $Schema
@@ -32,7 +32,7 @@ function New-table {
     }
     catch { write-fail -message $PSItem -verbosely:$verbosely}
     write-time -start $StartTime -verbosely:$verbosely
-    write-end -message 'New-table' -verbosely:$verbosely
+    write-end -verbosely:$verbosely
 }
 
 
