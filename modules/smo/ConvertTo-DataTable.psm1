@@ -1,4 +1,11 @@
 
+
+
+
+
+
+
+
 FUNCTION  ConvertTo-DataTable {
     param(
 
@@ -11,18 +18,33 @@ FUNCTION  ConvertTo-DataTable {
         # array of rows
         # each row is a hashtables
         [array] 
-        $Rows
+        $Rows,
+
+        [switch]
+        $verbosely  
     )
 
     # Make A Table
     $DATATABLE = [System.Data.Datatable]::new()
-    $DATATABLE.TableName = $TableName
+    if ($TableName) {
+        $DATATABLE.TableName = $TableName
+    }
+
 
     # Add Columns & Types
     FOREACH ( $ColumnName in $Columns.keys ) {
         [string]$DataType = $Columns.$ColumnName
-        [void]$DATATABLE.Columns.Add($ColumnName, $DataType)
+        
+        # attemp to add the Column
+        try {
+            [void]$DATATABLE.Columns.Add($ColumnName, $DataType)
+        }
+        catch {
+            write-fail "Could not add Column. $PSItem" -Verbosely:$Verbosely
+        }
     }
+
+
 
     # Add Rows
     FOREACH ($Row in $Rows) {
@@ -35,8 +57,7 @@ FUNCTION  ConvertTo-DataTable {
             # attemp to add the value to the row
             try {$NewRow.$key = $RowValue}
             catch {
-                write-host "could not add value to row"
-                write-host $PSItem -f red
+                write-fail "Could not add value to row. $PSItem" -Verbosely:$Verbosely
             }
         }
         
@@ -44,5 +65,14 @@ FUNCTION  ConvertTo-DataTable {
         [void]$DATATABLE.Rows.Add($NewRow)
     }
 
+    
     RETURN $DATATABLE
 }
+
+
+
+
+
+
+
+
