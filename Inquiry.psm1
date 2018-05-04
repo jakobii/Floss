@@ -4,7 +4,7 @@
  #>
 
  # Get all the things
-[array]$items = Get-ChildItem "$PSScriptRoot\modules" -Recurse
+[array]$items = Get-ChildItem "$PSScriptRoot\src" -Recurse
 foreach( $item in $items) {
 
     # filter the modules
