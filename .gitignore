@@ -1,3 +1,17 @@
 ~*
-modules/*/.git
-*secure*
+*.secure
+secure.*
+
+
+
+# you can add a modules folder for testing purposes only.
+modules/
+
+
+
+
+
+
+# conf files
+conf/keychain.json
+

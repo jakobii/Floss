@@ -1,0 +1,8 @@
+{
+    "Server": "",
+    "Database": "",
+    "Username": null,
+    "password": null,
+    "Integrated_Security": true,
+    "Trusted_Connection": true
+}
