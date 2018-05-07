@@ -17,26 +17,19 @@ FUNCTION Get-KeyChain {
         [string]
         $Member,
 
-        [string]
-        $ConfigPath,
 
+        [parameter(mandatory = $true)]
+        [string]
+        $Server,
+
+        [parameter(mandatory = $true)]
+        [string]
+        $Database,
+
+        
         [switch]
         $Verbosely
     )
-
-    # Resolve Config Path
-    if ( $ConfigPath ) {
-        $Config = Import-Config -path $ConfigPath
-    }
-    elseif( Test-Path "$PSScriptRoot\..\..\conf\keychain.json" ){
-        $Config = Import-Config -path "$PSScriptRoot\..\..\conf\keychain.json" 
-    }
-    elseif( Test-Path "$pwd\keychain.json" ){
-        $Config = Import-Config -path "$pwd\keychain.json" 
-    }
-    else{
-        Write-Fail 'Could Not find keychain.json file'
-    }
 
     # Resolve Query
     if ($PSCmdlet.ParameterSetName -eq 'ID') {
@@ -47,23 +40,16 @@ FUNCTION Get-KeyChain {
     }
 
 
-
     # build tsql params
     $tsql_params = @{}
     $tsql_params.Query = $Query
     $tsql_params.Verbosely = $Verbosely
-    $tsql_params.Server = $Config.Server
-    $tsql_params.Database = $Config.Database
-    $tsql_params.Trusted_Connection = $Config.Trusted_Connection
-
-    if ($Config.Username -and $Config.Password ) {
-        $tsql_params.Username = $Config.Username 
-        $tsql_params.Password = $Config.Password
-    }
-    else {
-        $tsql_params.Integrated_Security = $Config.Integrated_Security
-    }
+    $tsql_params.Server = $Server
+    $tsql_params.Database = $Database
+    $tsql_params.Trusted_Connection = $true
+    $tsql_params.Integrated_Security = $true
     
+
     Invoke-TSQL @tsql_params 
 
 }
