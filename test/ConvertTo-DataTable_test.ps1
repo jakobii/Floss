@@ -1,6 +1,6 @@
 
 
-import-module "$PSScriptRoot\..\psdtk.psm1"
+import-module "$PSScriptRoot\..\inquiry.psm1"
 
 $DataTable_Parameters = @{
 

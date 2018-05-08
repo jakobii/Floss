@@ -20,6 +20,21 @@ FUNCTION Out-Csv {
     Write-Start -verbosely:$Verbosely
     $start_time = get-date
     [hashtable]$state = [ordered]@{}
+
+
+    # Magic Path
+    $path_bool = Test-Path $Path
+    if (!$path_bool) {
+        try {
+            [System.IO.FileInfo]$path_obj = $Path
+            New-Item $path_obj.Directory -ItemType 'Directory' -Force | out-null
+            $state.Directory = $path_obj.Directory 
+        }
+        catch{
+            $state.Directory = $path_obj.Directory 
+        }
+    }
+
     
     # Export
     try {
