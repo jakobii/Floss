@@ -1,7 +1,7 @@
-Import-Module @(
-    "$PSScriptRoot\..\modules\smo\publish-table.psm1"
-    "$PSScriptRoot\..\modules\tsql\Invoke-TSQL.psm1"
-)
+Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
+import-module "$PSScriptRoot\..\inquiry.psm1"
+
+
 
 $TSQL = @{
     Server              = ''

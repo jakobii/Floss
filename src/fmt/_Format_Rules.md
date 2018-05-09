@@ -4,15 +4,41 @@
 
 
 
-# TSQL DataTypes Formating 
+# Formatters 
 
 ## Description
-Although both product are buld by microsoft, powershell and tsql, they dont always play well together. This is in part due to the teams having very different goal, but also tsql is a much older language. in any case there is a need to bridge the gap, to ensure that data can be reliably converted into something sql server can understand and use. thus we have formatter functions. these are writen with the functional programing philosophy and are easy to test and debug.
+The **InputObject** of the **Format-*Noun*** Functions will be transformed and sanatized and then returned as a valid *string* representation appropriate for the intended datatype. Powershells ducktyping allows for easy convertions to a more specific datatype afterwards.
+
+**Examples**
+```powershell
+[char]$result = Format-char "    F   "
+# returns "F"
+
+[Double]$result = Format-Percent "89%"
+# returns ".89"
+
+Format-ProperName "O'bRiAn"
+Format-ProperName "mcdonald"
+Format-ProperName "JaCoB OcHoA"
+# returns "O'Brian" & "McDonald" & "Jacob Ochoa"
+
+Format-Suffix "john, jr."
+Format-Suffix "JOHN SR"
+Format-Suffix "John iv"
+# returns 'Jr' & 'Sr' & 'IV' 
+
+Format-PhoneNumber '1231234'
+Format-PhoneNumber '1231231234'
+Format-PhoneNumber '1231231231234'
+# returns '123-1234' & '(123) 123-1234' & '+123 (123) 123-1234'
+```
+
+Speed is important but it is not the end goal. The **Format-*Noun*** functions primary goal is to deliver rich & robust formatting. This often involves using Regular Expressions under the hood to travers complex patterns. All formatters should be able handle complex edge cases. 
+
 
 ## Rules
-- All formaters should return SQL safe string Representation of the data
-- formaters should return $null if blank to ensure no empty spaces are added to strings
-- formater should also handle escaping, because escape rules may differ depending on the type and expectation of the formatter
-- All formatters should take a single value and return a single value. Other higher order functions can be built to handle delegating array members and the like.
-- Unless completely necessary, you should use the **-value** parameter name as the functions input paramter.
-- Each formatter gets a test file. the file can use the assert-string util to check if the output of the function meets expectations.
+- To keep things uniform use the ***InputObject*** as functions main input parameter.
+- Each formatter gets a test file. The file can use the **assert-*noun*** utils to check if the output of the function meets expectations. 
+- return $Null if the resulting value evaluates to falsy. *Pop-Falsy* is used for this.
+- Only accept a single value and return a single value. Other higher order functions can be built to handle delegating array members and the like.
+- Formatters should support piping to the ***InputObject*** parameter.

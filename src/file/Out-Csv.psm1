@@ -23,19 +23,9 @@ FUNCTION Out-Csv {
 
 
     # Magic Path
-    $path_bool = Test-Path $Path
-    if (!$path_bool) {
-        try {
-            [System.IO.FileInfo]$path_obj = $Path
-            New-Item $path_obj.Directory -ItemType 'Directory' -Force | out-null
-            $state.Directory = $path_obj.Directory 
-        }
-        catch{
-            $state.Directory = $path_obj.Directory 
-        }
-    }
+    New-Path $Path
 
-    
+
     # Export
     try {
         $Value | Export-Csv -Path $Path -Force -NoTypeInformation -ErrorAction 'Stop'

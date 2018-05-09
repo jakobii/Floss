@@ -1,15 +1,7 @@
+Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
+import-module "$PSScriptRoot\..\inquiry.psm1"
 
-
-
-
-
-
-
-
-import-module "$PSScriptRoot\..\psdtk.psm1"
-
-
-Out-SqlEscape -Value "O'brian"
+Protect-Sql -InputObject "O'brian"
 
 
 

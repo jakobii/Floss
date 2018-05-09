@@ -1,15 +1,19 @@
 
 
 
-FUNCTION Format-PhoneNumber($Value) {
+FUNCTION Format-PhoneNumber {
+    param(
+        [parameter(Mandatory = $true, ValueFromPipeline)]
+        $InputObject
+    )
 
     # Check if the Value has numbers in it
     # if it does not contain numbers return null
-    [bool]$Contains_Int = $Value -match '.*\d.*'
+    [bool]$Contains_Int = $InputObject -match '.*\d.*'
     if (!$Contains_Int) {return $null}
 
     # safely convert to string else null
-    try {[string]$PhoneNumber_Orginal = $Value}
+    try {[string]$PhoneNumber_Orginal = $InputObject}
     catch {Return $null}
 
     #[array]$CharArray = $PhoneNumber_Orginal.ToCharArray()

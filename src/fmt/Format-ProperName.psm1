@@ -1,10 +1,14 @@
 
 
-function format-ProperName($value) {
+function format-ProperName {
+    param(
+        [parameter(Mandatory = $true, ValueFromPipeline)]
+        $InputObject
+    )
 
     $eng = [System.Globalization.CultureInfo]::new('en-US')
         
-    $Name = $eng.TextInfo.ToTitleCase($value.tolower().trim())
+    $Name = $eng.TextInfo.ToTitleCase($InputObject.tolower().trim())
     switch -Regex ($Name) {
         
         # Scrub !@#$%^&*()[ ]

@@ -1,7 +1,5 @@
-Import-Module @(
-    "$PSScriptRoot\..\modules\tsql\Invoke-TSQL.psm1"
-    "$PSScriptRoot\..\modules\file\Out-Csv.psm1"
-)
+Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
+import-module "$PSScriptRoot\..\inquiry.psm1"
 
 
 $TSQL = @{

@@ -1,5 +1,5 @@
-Import-Module "$PSScriptRoot\..\util\Assert.psm1"
-Import-Module "$PSScriptRoot\ProperName.psm1"
+Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
+import-module "$PSScriptRoot\..\inquiry.psm1"
 
 
 [string]$name = Format-ProperName -Value "o'brian"

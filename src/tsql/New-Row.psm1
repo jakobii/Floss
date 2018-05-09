@@ -38,7 +38,7 @@ Function Format-TQSL ($Type, $Value) {
             $Formated_Value = "$Value"
         }
     }
-    return Out-SqlEscape -Value $Formated_Value
+    return Protect-Sql -InputObject $Formated_Value
 }
 
 
