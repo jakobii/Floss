@@ -10,7 +10,7 @@ FUNCTION Pop-Falsy {
     )
 
     # Quick Check, reduce Deep checks
-    if (!$InputObject) { Pop-Null -DBNull:$DBNull }
+    if (!$InputObject) { return Pop-Null -DBNull:$DBNull }
     
     # Deep Check
     [bool]$falsy = test-falsy $InputObject

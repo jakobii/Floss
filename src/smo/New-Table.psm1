@@ -1,6 +1,4 @@
 
-Import-Module "$PSScriptRoot\..\log\verbosely.psm1"
-
 
 function New-table {
     param(

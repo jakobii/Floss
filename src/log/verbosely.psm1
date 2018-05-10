@@ -156,9 +156,9 @@ FUNCTION Write-End {
         $Message,
 
         [switch]
-        $verbosely = $true
+        $Verbosely = $true
     )
-    if(!$verbosely){return}
+    if(!$Verbosely){return}
     if (!$Message) {[string]$Message = $(Get-PSCallStack)[1].FunctionName}
     Write-Host "`0Ending`0$Message`0`n" -f black -b Gray
 }
@@ -169,9 +169,9 @@ FUNCTION Write-Start {
         $Message,
 
         [switch]
-        $verbosely = $true
+        $Verbosely = $true
     )
-    if(!$verbosely){return}
+    if(!$Verbosely){return}
     if (!$Message) {[string]$Message = $(Get-PSCallStack)[1].FunctionName}
     Write-Host "`n`0Starting`0$Message`0" -f black -b DarkCyan
 }

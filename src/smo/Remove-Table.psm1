@@ -1,7 +1,4 @@
 
-Import-Module "$PSScriptRoot\..\log\verbosely.psm1"
-
-
 
 function Remove-Table {
     param(
@@ -12,24 +9,24 @@ function Remove-Table {
         
         [alias('v')]   
         [switch]
-        $verbosely
+        $Verbosely
     )
     
     $StartTime = get-date
-    write-start -message 'Remove-table' -verbosely:$verbosely
+    write-start -message 'Remove-table' -Verbosely:$Verbosely
     $Params = @{}
     $Params.Query = "DROP TABLE IF EXISTS [$Schema].[$Table]"
     $Params.ConnectionString = "Server=$Server; Database=$Database; Trusted_Connection=Yes; Integrated Security=SSPI;"
     $Params.ErrorAction = 'stop'
 
-    write-note -message $Params -verbosely:$verbosely
+    write-note -message $Params -Verbosely:$Verbosely
     try {
         Invoke-Sqlcmd @Params
-        write-success -message 'Table Dropped' -verbosely:$verbosely
+        write-success -message 'Table Dropped' -Verbosely:$Verbosely
     }
-    catch { write-fail -message $PSItem -verbosely:$verbosely}
-    write-time -start $StartTime -verbosely:$verbosely
-    write-end -message 'Remove-table'  -verbosely:$verbosely
+    catch { write-fail -message $PSItem -Verbosely:$Verbosely}
+    write-time -start $StartTime -Verbosely:$Verbosely
+    write-end -message 'Remove-table'  -Verbosely:$Verbosely
 }
 
 

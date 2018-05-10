@@ -1,12 +1,8 @@
 
 
-$Modules = @(
-    "$PSScriptRoot\New-Table.psm1"
-    "$PSScriptRoot\Remove-Table.psm1"
-    "$PSScriptRoot\..\log\verbosely.psm1"
-)
 
-Import-Module $Modules
+
+
 
 Function Publish-Table {
     param(
@@ -15,15 +11,14 @@ Function Publish-Table {
         [string]$Schema,
         [string]$Table,
         $InputObject,
-        
-        [alias('v')]   
+         
         [switch]
-        $verbosely
+        $Verbosely
     )
 
     # Production table Safty net.
     if ($Schema -eq 'pro') {
-        write-fail -verbosely $true -m 'You can not publish to production table. Please choose a different Schema.' 
+        write-fail -Verbosely $true -m 'You can not publish to production table. Please choose a different Schema.' 
         return
     }
 
@@ -32,23 +27,27 @@ Function Publish-Table {
         Database = $Database 
         Schema = $Schema 
         Table = $Table 
-        verbosely = $verbosely   
+        Verbosely = $Verbosely   
     }
 
-    Remove-Table @RemParams
+    Remove-Table @RemParams | Out-Null
     
     $NewParams = @{
         Server = $Server 
         Database = $Database 
         Schema = $Schema 
         Table = $Table 
-        verbosely = $verbosely   
+        Verbosely = $Verbosely   
         InputObject = $InputObject
     }
 
-    New-table @NewParams
+    New-table @NewParams | Out-Null
 
 }
+
+
+
+
 
 
 

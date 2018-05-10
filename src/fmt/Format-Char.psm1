@@ -15,13 +15,13 @@ FUNCTION Format-Char {
         [switch]
         $DBNull
     )
-    if(Test-Falsy $InputObject){ return Pop-Falsy -DBNull:$DBNull }
+    if (Test-Falsy $InputObject) { return Pop-Falsy -DBNull:$DBNull }
 
     [string]$str = $InputObject
     [array]$char_array = $str.ToCharArray()
     
     FOREACH ($Char in $char_array) {
-        if ($Char -ne ' ') { 
+        if ( test-falsy $Char -af ) { 
             [string]$OutputObject = $Char
             Break
         }
