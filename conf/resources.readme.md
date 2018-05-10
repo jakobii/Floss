@@ -13,6 +13,7 @@ A good example for this would be to store information required to conenct to a d
     { 
         //ID is required
         "ID":"MyDB",
+        "Group":"NY-01"
         "Server": "Srv01",
         "Database": "AwesomeDb"
         "Columns":[
@@ -26,7 +27,8 @@ A good example for this would be to store information required to conenct to a d
     //object 2
     {
         // ID is required
-        "ID":"fs", 
+        "ID":"fs",
+        "Group":"NY-01" 
         "Server": "Srv02",
         "File_Share": "C:\\some\\file\\path"
     }
@@ -42,8 +44,18 @@ A good example for this would be to store information required to conenct to a d
 JSON is just a medium for serializing javacript objects. Powershell does not have a native serialization model and XML super sucks. Powershell can convert JSON Natively into proper powershell objects. JSON is an internet standard and is easy to read.
 
 
-
+---
 # Get-Resource
+
+```info
+Get-Resource -ID <string> [-Path <system.io.fileinfo>]
+```
+
+```info
+Get-Resource -Group <string> [-Path <system.io.fileinfo>]
+```
+
+## Description
 The function Get-Resource makes using the resources.json file easy. Once you have add a resource object you can forget the resouce is stored JSON, and just use it as a normal psobject.
 
 ## Example
@@ -58,7 +70,34 @@ $DB.Columns[3]
 If you dont store your resources.json in the **conf** directory. you can do this.
 
 ```powershell
-$DB = Get-Resouce -ID 'MyDB' -Path "C:\path\to\resources.json"
+$DB = Get-Resouce -Group 'NY-*' -Path "C:\path\to\resources.json"
+```
+
+```powershell
+$DB = Get-Resouce -Group 'NY-*' -Path "C:\path\to\resources.json"
 ```
 
 
+## Parameters
+
+### Group
+The Group parameter will cause Get-Resouce to return an Array of resouce objects.
+
+
+|Propery|Value|
+|---|---|
+|type|string|
+|Wildcards|true|
+|Pipline|false|
+|Retrun|Array|
+
+
+### ID
+The ID parameter will always return a single resouce Object.
+
+|Propery|Value|
+|---|---|
+|type|string|
+|Wildcards|false|
+|Pipline|false|
+|Retrun|psobject|

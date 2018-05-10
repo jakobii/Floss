@@ -4,7 +4,6 @@
 
 FUNCTION Get-Resource {
     Param(
-
         [parameter(ParameterSetName = "ID", Mandatory = $true)]
         [string]
         $ID,
@@ -15,8 +14,6 @@ FUNCTION Get-Resource {
 
         [System.io.fileinfo]
         $Path
-
-
     )
 
 
@@ -99,7 +96,7 @@ FUNCTION Get-Resource {
 
     if ($PSCmdlet.ParameterSetName -eq 'ID') {
         foreach ($Resource in $Resources) {
-            if ($Resource.ID -eq $ID) {
+            if ( $Resource.ID -eq $ID ) {
                 $OutputObject = $Resource
             }
         }
@@ -108,7 +105,7 @@ FUNCTION Get-Resource {
     if ($PSCmdlet.ParameterSetName -eq 'Group') {
         [array]$OutputObject = @()
         foreach ($Resource in $Resources) {
-            if ($Resource.Group -eq $Group) {
+            if ( $Resource.Group -like $Group ) {
                 [array]$OutputObject += $Resource
             }
         }
