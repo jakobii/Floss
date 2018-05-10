@@ -11,7 +11,7 @@ The **InputObject** of the **Format-*Noun*** Functions will be transformed and s
 
 **Examples**
 ```powershell
-[char]$result = Format-char "    F   "
+[char]$result = Format-char "    F   some_bad_data"
 # returns "F"
 
 [Double]$result = Format-Percent "89%"
@@ -22,7 +22,7 @@ Format-ProperName "mcdonald"
 Format-ProperName "JaCoB OcHoA"
 # returns "O'Brian" & "McDonald" & "Jacob Ochoa"
 
-Format-Suffix "john, jr."
+Format-Suffix "jOhN, jR."
 Format-Suffix "JOHN SR"
 Format-Suffix "John iv"
 # returns 'Jr' & 'Sr' & 'IV' 
@@ -38,7 +38,7 @@ Speed is important but it is not the end goal. The **Format-*Noun*** functions p
 
 ## Rules
 - To keep things uniform use the ***InputObject*** as functions main input parameter.
-- Each formatter gets a test file. The file can use the **assert-*noun*** utils to check if the output of the function meets expectations. 
-- return $Null if the resulting value evaluates to falsy. *Pop-Falsy* is used for this.
-- Only accept a single value and return a single value. Other higher order functions can be built to handle delegating array members and the like.
+- Each formatter gets a test file. The file can use the **Assert-*Noun*** utils to check if the output of the function meets expectations. 
+- Return $Null if the resulting value evaluates to falsy. **Pop-Falsy** can be used for this.
+- Only accept a single value for the ***InputObject*** and only return a single value. Other higher order functions can be built to handle delegating array members and the like.
 - Formatters should support piping to the ***InputObject*** parameter.

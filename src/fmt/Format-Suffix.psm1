@@ -4,9 +4,13 @@
 FUNCTION Format-Suffix {
     param(
         [parameter(Mandatory = $true, ValueFromPipeline)]
-        $InputObject
+        $InputObject,
+
+        [switch]
+        $DBNull
     )
+    if(Test-Falsy $InputObject){ return Pop-Falsy -DBNull:$DBNull }
 
 
-    return $InputObject
+    return Pop-Falsy $InputObject -DBNull:$DBNull
 }

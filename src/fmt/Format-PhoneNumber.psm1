@@ -4,8 +4,12 @@
 FUNCTION Format-PhoneNumber {
     param(
         [parameter(Mandatory = $true, ValueFromPipeline)]
-        $InputObject
+        $InputObject,
+
+        [switch]
+        $DBNull
     )
+    if(Test-Falsy $InputObject){ return Pop-Falsy -DBNull:$DBNull }
 
     # Check if the Value has numbers in it
     # if it does not contain numbers return null
@@ -33,7 +37,7 @@ FUNCTION Format-PhoneNumber {
             $Match = $Regex.Match($PhoneNumber_Int_Only)
             [string]$g1 = $Match.Groups[1].Value
             [string]$g2 = $Match.Groups[2].Value
-            [string]$PhoneNumber_Formatted = "$g1-$g2"
+            [string]$OutputObject = "$g1-$g2"
             break
         }
 
@@ -44,7 +48,7 @@ FUNCTION Format-PhoneNumber {
             [string]$g1 = $Match.Groups[1].Value
             [string]$g2 = $Match.Groups[2].Value
             [string]$g3 = $Match.Groups[3].Value
-            [string]$PhoneNumber_Formatted = "($g1) $g2-$g3"
+            [string]$OutputObject = "($g1) $g2-$g3"
             break
         }
 
@@ -56,19 +60,19 @@ FUNCTION Format-PhoneNumber {
             [string]$g2 = $Match.Groups[2].Value
             [string]$g3 = $Match.Groups[3].Value
             [string]$g4 = $Match.Groups[4].Value
-            [string]$PhoneNumber_Formatted = "+$g1 ($g2) $g3-$g4"
+            [string]$OutputObject = "+$g1 ($g2) $g3-$g4"
             break
         }
         
         # Non-formatted PhoneNumber
         # Digit Length did not meet any standard
         default {
-            [string]$PhoneNumber_Formatted = $PhoneNumber_Int_Only.trim()
+            [string]$OutputObject = $PhoneNumber_Int_Only.trim()
             break
         }
     }
 
-    return [string]$PhoneNumber_Formatted
+    return Pop-Falsy $OutputObject -DBNull:$DBNull
 }
 
 

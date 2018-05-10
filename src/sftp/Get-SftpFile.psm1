@@ -38,13 +38,15 @@ function Get-SftpFile {
 
     write-start -Verbosely:$Verbosely
     $StartTime = get-date
-    $LOG = @{}
-    $LOG.DllPath = $DllPath
+    [hashtable]$log = @{}
+    $log.DllPath = $DllPath
     # Load WinSCP .NET assembly 
     try {  
         [System.Reflection.Assembly]::UnsafeLoadFrom($DllPath) | Out-Null
+        $log.Dll_Load_Success = $true
     }
     catch {
+        $log.DllLoadSuccess = $false
         write-fail "could not load the winscpnet.dll. $PSItem"
     }
 
@@ -55,7 +57,7 @@ function Get-SftpFile {
     if ($Force) {
         try {
             Remove-Item -Path "$Path\$UnixFile" -Force -ErrorAction 'stop'
-            $LOG.Removed = "$Path\$UnixFile"
+            $log.File_Removed = "$Path\$UnixFile"
         }
         catch {}
     }
@@ -72,19 +74,19 @@ function Get-SftpFile {
 
     $Auth = New-Object WinSCP.SessionOptions -Property $WinSCP_Properties
     $Session = New-Object WinSCP.Session
-    $LOG += $WinSCP_Properties
+    [hashtable]$log = $log + $WinSCP_Properties
 
     try {
         $Session.Open($Auth)
         $Session.GetFiles("$UnixPath/$UnixFile", "$("$Path")\*").Check()
-        $LOG.Success = $true
-        write-success $LOG  -Verbosely:$Verbosely
+        $log.Success = $true
+        write-success $log  -Verbosely:$Verbosely
     }
     catch {
         
-        $LOG.Error = $PSItem
-        $LOG.Success = $False
-        write-fail $LOG -Verbosely:$Verbosely
+        $log.Error = $PSItem
+        $log.Success = $False
+        write-fail $log -Verbosely:$Verbosely
 
         $Session.Dispose() 
     }

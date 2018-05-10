@@ -1,20 +1,20 @@
 FUNCTION Format-TitleCase  {
     param(
         [parameter(Mandatory = $true, ValueFromPipeline)]
-        $InputObject
+        $InputObject,
+
+        [switch]
+        $DBNull
     )
 
-    [string]$str = $InputObject
-    [string]$lower = $str.tolower()
-    [string]$trim = $lower.Trim()
-    [string]$title = ToTitleCase = $eng.TextInfo.ToTitleCase($trim)
-
-    if (test-falsy $title) {
-        return $null
-    } 
-    else {
-        return $title
-    }
+    if(Test-Falsy $InputObject){ return Pop-Falsy -DBNull:$DBNull }
     
-    return $InputObject
+    [string]$string = $InputObject
+    [string]$lowered = $string.tolower()
+    [string]$trimmed = $lowered.Trim()
+
+    $eng = [System.Globalization.CultureInfo]::new('en-US')
+    [string]$OutputObject = $eng.TextInfo.ToTitleCase($trimmed)
+
+    return Pop-Falsy $OutputObject -DBNull:$DBNull
 }

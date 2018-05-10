@@ -2,17 +2,20 @@
 # Returns null if the InputObject evaluates to falsy
 FUNCTION Pop-Falsy {
     param(
-        $InputObject
+        [parameter(ValueFromPipeline)]
+        $InputObject,
+
+        [switch]
+        $DBNull
     )
 
+    # Quick Check, reduce Deep checks
+    if (!$InputObject) { Pop-Null -DBNull:$DBNull }
+    
+    # Deep Check
     [bool]$falsy = test-falsy $InputObject
-
-    if($falsy){
-        return $null
-    }
-    else{
-        return $InputObject
-    }
+    if ($falsy) { Pop-Null -DBNull:$DBNull }
+    else {return $InputObject}
 }
 
 

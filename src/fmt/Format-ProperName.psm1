@@ -3,8 +3,12 @@
 function format-ProperName {
     param(
         [parameter(Mandatory = $true, ValueFromPipeline)]
-        $InputObject
+        $InputObject,
+
+        [switch]
+        $DBNull
     )
+    if(Test-Falsy $InputObject){ return Pop-Falsy -DBNull:$DBNull }
 
     $eng = [System.Globalization.CultureInfo]::new('en-US')
         
@@ -61,9 +65,7 @@ function format-ProperName {
         }
     }
     
-    if ($Name) {
-        return $Name
-    }
+    return Pop-Falsy $Name -DBNull:$DBNull
 }
 
 
