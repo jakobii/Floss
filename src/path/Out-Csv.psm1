@@ -23,7 +23,7 @@ FUNCTION Out-Csv {
 
 
     # Magic Path
-    New-Path $Path
+    New-Path $Path -ExcludeFile
 
 
     # Export

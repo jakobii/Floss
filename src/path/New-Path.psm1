@@ -32,7 +32,7 @@ FUNCTION New-Path {
 
     try {
         New-Item @path_params | Out-Null
-        write-success $path -Verbosely:$Verbosely
+        write-success $NewPath -Verbosely:$Verbosely
     }
     catch {
         write-fail $psitem -Verbosely:$Verbosely
