@@ -1,0 +1,33 @@
+
+
+
+
+Function New-Password ($length = 8 ) {
+    DO {
+        #GEN PASSWORD
+        $Password = [System.Web.Security.Membership]::GeneratePassword( $length, 2)
+        
+        # AD PASSWORD REQUIREMENTS
+        $SPECIAL = [regex]::new('[!@#$%<>^&?]').Match( $Password )
+        $LOWER   = [regex]::new('[a-z]').Match( $Password )
+        $UPPER   = [regex]::new('[A-Z]').Match( $Password )
+        $NUMBER  = [regex]::new('[0-9]').Match( $Password )
+        $LENGTH  = [regex]::new(".{$length,}").Match( $Password )
+        
+        # TEST PASSWORD
+        $Meets_Complexity = $true
+        if (!$SPECIAL.Success) {$Meets_Complexity = $false}
+        if (!$LOWER.Success)   {$Meets_Complexity = $false}
+        if (!$UPPER.Success)   {$Meets_Complexity = $false}
+        if (!$NUMBER.Success)  {$Meets_Complexity = $false}
+        if (!$LENGTH.Success)  {$Meets_Complexity = $false}
+    }
+    Until($Meets_Complexity)
+
+    return $Password
+}
+
+
+
+
+

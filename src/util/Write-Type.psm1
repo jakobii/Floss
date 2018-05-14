@@ -1,3 +1,5 @@
+#beta
+
 FUNCTION Write-Type ($Value, $Tag){
     $typ = $Value.gettype()
     write-host  "Value : $Value" -f y
