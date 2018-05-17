@@ -3,14 +3,29 @@
  # the type provided to be out in a log. and prevents the type from 
  # being converted to a string and giving a false positive.
  #>
-FUNCTION Assert-String($InputObject, [string]$Expect, [string]$Tag) {
+FUNCTION Assert-String {
+    PARAM(
+        [parameter(Mandatory = $true, ValueFromPipeline)]
+        [AllowNull()]
+        [AllowEmptyString()]
+        $InputObject, 
 
+        [AllowNull()]
+        $Expect, 
+        
+        [string]
+        $Tag,
+        
+        [switch]
+        $CaseInSensitive
+    )
+    
     Write-Start
     Write-Alert $Tag
     $log = @{}
 
     # Success 
-    if ($InputObject -eq $Expect) {
+    if ( (!$CaseInSensitive -and $InputObject -ceq $Expect) -or ($CaseInSensitive -and $InputObject -eq $Expect) ){
         $Success = $true
     }
     else {
@@ -26,23 +41,23 @@ FUNCTION Assert-String($InputObject, [string]$Expect, [string]$Tag) {
     }
 
     #type 
-    if($InputObject -eq $null ){
+    if ($InputObject -eq $null ) {
         $log.Datatype = 'null'
     }
-    else{
+    else {
         $log.DataType = $InputObject.GetType()
         $log.TypeBase = $($InputObject.GetType()).BaseType.Name
     }
 
     
-    $log.Success  = $Success
+    $log.Success = $Success
     $log.Expected = $Expect
     $log.InputObeject = $InputObject
 
-    if($Success){
+    if ($Success) {
         Write-Success $log 
     }
-    else{
+    else {
         Write-Fail $log
     }
 

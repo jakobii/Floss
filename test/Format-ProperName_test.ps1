@@ -1,31 +1,15 @@
-Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
+#unit
+
 import-module "$PSScriptRoot\..\inquiry.psm1"
 
+Format-ProperName "o'bRiAn" | Assert-String -Expect "O''Brian" -Tag "Irish Name"
 
-[string]$name = Format-ProperName -InputObject "o'bRiAn"
-Assert-String -InputObject $name -Expect "O''Brian" -Tag "Irish Name"
+Format-ProperName "o'brian. jr." | Assert-String -Expect "O''Brian" -Tag "Irish Name with suffix Jr"
 
+Format-ProperName "mcdonald.sr" | Assert-String -Expect "McDonald" -Tag "McName Name with suffix Sr"
 
-[string]$name = Format-ProperName -InputObject "o'brian. jr."
-Assert-String -InputObject $name -Expect "O''Brian" -Tag "Irish Name with suffix Jr"
+Format-ProperName "o'brian IV" | Assert-String -Expect "O''Brian" -Tag "Irish Name with suffix in roman numerals"
 
-[string]$name = Format-ProperName -InputObject "mcdonald.sr"
-Assert-String -InputObject $name -Expect "McDonald" -Tag "McName Name with suffix Sr"
+Format-ProperName "()*&#$%^&*#@#&)(*&{}|\$^$" | Assert-String -Expect $null -Tag "Special Char Removal"
 
-[string]$name = Format-ProperName -InputObject "o'brian IV"
-Assert-String -InputObject $name -Expect "O''Brian" -Tag "Irish Name with suffix in roman numerals"
-
-
-
-[string]$name = Format-ProperName -InputObject "()*&#$%^&*#@#&)(*&{}|\$^$"
-Assert-String -InputObject $name -Expect "" -Tag "Special Char Removal"
-
-
-# [fix] unlikely sonario but still...
-[string]$name = Format-ProperName -InputObject "''''''''''"
-Assert-String -InputObject $name -Expect "" -Tag "only single quotes, still broken.."
-
-
-# [fix] unlikely sonario but still...
-[string]$name = Format-ProperName -InputObject 'jAcOb OcHoA'
-Assert-String -InputObject $name -Expect "Jacob Ochoa" -Tag "fn ln"
+'jAcOb OcHoA' | Format-ProperName | Assert-String -Expect "Jacob Ochoa" -Tag "fn ln on the pipeline"

@@ -1,4 +1,4 @@
-
+#unit
 import-module "$PSScriptRoot\..\inquiry.psm1"
 
 $max = get-max 298374982374,928374,354123

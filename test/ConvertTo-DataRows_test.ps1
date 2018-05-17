@@ -1,6 +1,9 @@
-Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
+#unit
+
 import-module "$PSScriptRoot\..\inquiry.psm1"
  
+
+
 $DataTable_Parameters = @{
 
     TableName = 'employees'
@@ -15,6 +18,9 @@ $DataTable_Parameters = @{
         @{ id = 789 ; fn = 'beth'  ; hd = '2018-12-09' }
     )
 }
+$DataRows = ConvertTo-DataRows @DataTable_Parameters
 
-ConvertTo-DataRows @DataTable_Parameters
 
+
+$DataRows[0].fn | Assert-String -Expect 'rick'
+$DataRows[2].id | Assert-String -Expect '789'

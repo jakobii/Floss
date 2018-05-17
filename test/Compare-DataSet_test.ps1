@@ -1,4 +1,5 @@
-Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
+#unit
+
 import-module "$PSScriptRoot\..\inquiry.psm1"
  
 $DataTable_Parameters = @{
@@ -18,15 +19,10 @@ $DataTable_Parameters = @{
 }
 
 $Rows = ConvertTo-DataRows @DataTable_Parameters
-
-
-Get-Hash $rows[0].ItemArray
-
-
 $hist = Compare-DataSet -old $Rows[2] -new $Rows[3] -IncludeHistory
 
-$hist.fn.new
-$hist.fn.old
+$hist.fn.new | Assert-String -Expect 'Bethany' -Tag 'new column value'
+$hist.fn.old | Assert-String -Expect 'Beth' -Tag 'old column value'
 
 
 

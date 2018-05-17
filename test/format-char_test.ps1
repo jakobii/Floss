@@ -1,4 +1,5 @@
-Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
+#unit
+
 import-module "$PSScriptRoot\..\inquiry.psm1"
 
 $char = format-char '   great'
@@ -8,6 +9,7 @@ Assert-String -InputObject $char -Expect 'g' -tag "first character of string, in
 
 $char = format-char 'w'
 Assert-String -InputObject $char -Expect 'w' -tag "single char"
+
 
 
 

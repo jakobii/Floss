@@ -3,6 +3,8 @@
 function format-ProperName {
     param(
         [parameter(Mandatory = $true, ValueFromPipeline)]
+        [AllowNull()]
+        [AllowEmptyString()]
         $InputObject
     )
     if (Test-Falsy $InputObject) { return $null }

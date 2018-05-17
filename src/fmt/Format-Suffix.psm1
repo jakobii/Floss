@@ -1,4 +1,3 @@
-#beta
 
 
 FUNCTION Format-Suffix {
@@ -10,56 +9,27 @@ FUNCTION Format-Suffix {
     if (Test-Falsy $InputObject) { return $null }
 
     $eng = [System.Globalization.CultureInfo]::new('en-US')
-    switch -Regex ([string]$InputObject) {
-        
+    switch -Regex ($InputObject) {
+
         # Sr | JR
-        '[,. ]+?\b[JjSs][Rr]\b[,.]?$' {
-            $regx = [regex]::new("^[A-Za-z.'-]+[,. ]+?\b")
-            $str = $regx.Replace($InputObject, '')
-            $str = $eng.TextInfo.ToTitleCase($str.tolower())
+        '\b[JjSs][Rr]\b' {
+            $regx = [regex]::new("\b([JjSs][Rr])\b")
+            $match = $regx.match($InputObject)
+            [STRING]$Suffix = $match.Groups[1].Value.ToLower()
+            break
         }
         
-        # Roman Numerals
-        "^[A-Za-z.'-]+[,. ]+?[VvIi]{1,3}[,.]?$" {
-            $regx = [regex]::new("^[A-Za-z.'-]+[,. ]+?(?=[IiVv]+)") 
-            [string]$str = $regx.Replace($InputObject, '')
-            $str = $eng.TextInfo.ToTitleCase($str)
-        }
-        
-        # Scrub !@#$%^&*()
-        "\W" {
-            $regx = [regex]::new("\W")
-            $OutputObject = $regx.Replace($str, '')
+        # Roman Numerals 1-13
+        "\b(I{1,3}|I{0,3}XI{0,3}|I{0,3}VI{0,3})\b" {
+            $regx = [regex]::new("\b(I{1,3}|I{0,3}XI{0,3}|I{0,3}VI{0,3})\b") 
+            $match = $regx.match($InputObject)
+            [STRING]$Suffix = $match.Groups[1].Value
             break
         }
     }
 
-    return Pop-Falsy $OutputObject
-}
-
-
-function Format-Suffix([string]$sfx) {
-    $eng = [System.Globalization.CultureInfo]::new('en-US')
-    switch -Regex ([string]$sfx) {
-        # Sr | JR
-        '[,. ]+?\b[JjSs][Rr]\b[,.]?$' {
-            $regx = [regex]::new("^[A-Za-z.'-]+[,. ]+?\b")
-            $str = $regx.Replace($sfx, '')
-            $str = $eng.TextInfo.ToTitleCase($str.tolower())
-        }
-        # Roman Numerals
-        "^[A-Za-z.'-]+[,. ]+?[VvIi]{1,3}[,.]?$" {
-            $regx = [regex]::new("^[A-Za-z.'-]+[,. ]+?(?=[IiVv]+)") 
-            [string]$str = $regx.Replace($sfx, '')
-            $str = $eng.TextInfo.ToTitleCase($str)
-        }
-        # Scrub !@#$%^&*()
-        "\W" {
-            $regx = [regex]::new("\W")
-            $str = $regx.Replace($str, '')
-            break
-        }
-        default {return $null}
+    if ($Suffix) {
+        [string]$OutputObject = $eng.TextInfo.ToTitleCase( $Suffix )
+        return $OutputObject
     }
-    return $str 
 }

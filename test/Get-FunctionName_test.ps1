@@ -1,11 +1,13 @@
-Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
+#unit
+
 import-module "$PSScriptRoot\..\inquiry.psm1"
 
-Function foo-Bar () {
-    write-host $(Get-FunctionName)
+Function Get-foo () {
+    Get-FunctionName
 }
 
-foo-Bar
+Get-foo | Assert-String -Expect 'Get-foo' -Tag 'parent function'
+
 
 
 
