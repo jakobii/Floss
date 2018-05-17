@@ -5,12 +5,9 @@
 function Format-Int {
     param(
         [parameter(Mandatory = $true, ValueFromPipeline)]
-        $InputObject,
-
-        [switch]
-        $DBNull
+        $InputObject
     )
-    if(Test-Falsy $InputObject){ return Pop-Falsy -DBNull:$DBNull }
+    if (Test-Falsy $InputObject) { return $null }
 
     [string]$int = ''
     foreach ($char in $InputObject.ToCharArray()) {
@@ -20,7 +17,7 @@ function Format-Int {
         }
     }
 
-    return Pop-Falsy $int -DBNull:$DBNull
+    return Pop-Falsy $int
 }
 
 

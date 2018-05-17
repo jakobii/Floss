@@ -1,7 +1,5 @@
 
 
-Import-Module "$PSScriptRoot\..\log\verbosely.psm1"
-
 
 FUNCTION Out-Csv {
 

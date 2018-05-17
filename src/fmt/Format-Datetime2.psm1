@@ -4,12 +4,9 @@
 Function Format-DateTime2 {
     param(
         [parameter(Mandatory = $true, ValueFromPipeline)]
-        $InputObject,
-
-        [switch]
-        $DBNull
+        $InputObject
     )
-    if(Test-Falsy $InputObject){ return Pop-Falsy -DBNull:$DBNull }
+    if (Test-Falsy $InputObject) { return $null }
 
 
     $DT = Get-Date -Date $InputObject
@@ -19,7 +16,7 @@ Function Format-DateTime2 {
     [string]$DateTime2 += $DT.TimeOfDay.ToString()
     [string]$OutputObject = $DateTime2
 
-    return Pop-Falsy $OutputObject -DBNull:$DBNull
+    return Pop-Falsy $OutputObject
 }
 
 

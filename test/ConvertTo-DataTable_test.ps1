@@ -1,6 +1,6 @@
 Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
 import-module "$PSScriptRoot\..\inquiry.psm1"
-
+ 
 $DataTable_Parameters = @{
 
     TableName = 'employees'
@@ -16,5 +16,5 @@ $DataTable_Parameters = @{
     )
 }
 
-ConvertTo-DataTable @DataTable_Parameters
+ConvertTo-DataRows @DataTable_Parameters
 

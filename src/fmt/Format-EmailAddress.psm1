@@ -3,12 +3,9 @@
 FUNCTION Format-EmailAddress {
     param(
         [parameter(Mandatory = $true, ValueFromPipeline)]
-        $InputObject,
-
-        [switch]
-        $DBNull
+        $InputObject
     )
-    if(Test-Falsy $InputObject){ return Pop-Falsy -DBNull:$DBNull }
+    if (Test-Falsy $InputObject) { return $null }
     
-    return Pop-Falsy $InputObject -DBNull:$DBNull
+    return Pop-Falsy $InputObject
 }

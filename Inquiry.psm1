@@ -7,10 +7,15 @@
 [array]$items = Get-ChildItem "$PSScriptRoot\src" -Recurse
 foreach( $item in $items) {
 
+   
     # filter the modules
     if($item.Extension -eq '.psm1'){
         [array]$lines = Get-Content -ReadCount 1 -Path $item.FullName
-
+        
+        # skip empty files
+        if($lines -eq $null ){continue} 
+        
+        
         # ignore beta modules
         if($lines[0].Trim() -ne '#beta'){
             

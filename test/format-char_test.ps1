@@ -2,7 +2,7 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
 import-module "$PSScriptRoot\..\inquiry.psm1"
 
 $char = format-char '   great'
-Assert-String -InputObject $char -Expect 'g' -tag "first of string"
+Assert-String -InputObject $char -Expect 'g' -tag "first character of string, ingnore spaces"
 
 
 

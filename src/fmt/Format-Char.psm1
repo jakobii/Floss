@@ -10,12 +10,9 @@
 FUNCTION Format-Char {
     param(
         [parameter(Mandatory = $true, ValueFromPipeline)]
-        $InputObject,
-
-        [switch]
-        $DBNull
+        $InputObject
     )
-    if (Test-Falsy $InputObject) { return Pop-Falsy -DBNull:$DBNull }
+    if (Test-Falsy $InputObject) { return $null }
 
     [string]$str = $InputObject
     [array]$char_array = $str.ToCharArray()
@@ -27,7 +24,7 @@ FUNCTION Format-Char {
         }
     }
 
-    return Pop-Falsy $OutputObject -DBNull:$DBNull
+    return Pop-Falsy $OutputObject
 }
 
 

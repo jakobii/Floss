@@ -1,6 +1,6 @@
 
 
-function New-table {
+function Write-table {
     param(
         [string]$Server, 
         [string]$Database, 
@@ -8,9 +8,17 @@ function New-table {
         [string]$Table,
         $InputObject,
         
-        [alias('v')]   
         [switch]
-        $verbosely
+        $verbosely,
+
+        [switch]
+        $force,
+
+        [string]
+        $Username,
+
+        [string]
+        $Password
     )
     $StartTime = get-date
     write-start -verbosely:$verbosely
@@ -19,13 +27,18 @@ function New-table {
     $Params.SchemaName = $Schema
     $Params.TableName = $Table
     $Params.ServerInstance = $Server
-    $Params.force = $true
+    $Params.force = $force
     $Params.ErrorAction = 'stop'
+
+    if($Username -and $Password){
+        $Params.Credential = New-Credential -Username $Username -Password $Password
+    }
+
     write-note -message $Params -verbosely:$verbosely
     
     $Params.InputData = $InputObject
     try {
-        Write-SqlTableData @Params
+        Write-SqlTableData @Params 
         write-success -message 'Table Created' -verbosely:$verbosely
     }
     catch { write-fail -message $PSItem -verbosely:$verbosely}

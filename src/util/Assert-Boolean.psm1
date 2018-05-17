@@ -7,9 +7,8 @@ FUNCTION Assert-Boolean {
     )
 
     Write-Start
+    Write-Alert $Tag
     $log = @{}
-    $log.Tag = $Tag
-
 
     # success
     if ($Expect -eq $InputObject) {

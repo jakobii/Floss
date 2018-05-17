@@ -13,7 +13,10 @@ FUNCTION Get-Resource {
         $Group,
 
         [System.io.fileinfo]
-        $Path
+        $Path,
+
+        [int]
+        $CallStack = 2
     )
 
 
@@ -23,7 +26,7 @@ FUNCTION Get-Resource {
     }
     elseif (!$Path) {
         
-        $ParentFunction = Get-Function -CallStack 2
+        $ParentFunction = Get-Function -CallStack $CallStack
         $ParentFunctionDirectory = $($ParentFunction.Directory)
         #Check the current directory and the move out
         if (Test-Path  "$ParentFunctionDirectory\resources.json") {

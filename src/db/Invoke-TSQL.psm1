@@ -1,11 +1,5 @@
 
 
-Import-Module "$PSScriptRoot\..\log\verbosely.psm1"
-
-
-
-
-
 
 
 
@@ -71,7 +65,7 @@ FUNCTION Invoke-TSQL {
     if ($Password) {
         [string]$Conn += "Password=$Password;"
     }
-    if ($Integrated_Security) {
+    if ($Integrated_Security.IsPresent -or (!$Password -and !$Username) ) {
         [string]$Conn += "Integrated Security=SSPI;"
     }
 

@@ -5,12 +5,9 @@
 Function Format-DateTime {
     param(
         [parameter(Mandatory = $true, ValueFromPipeline)]
-        $InputObject,
-
-        [switch]
-        $DBNull
+        $InputObject
     )
-    if(Test-Falsy $InputObject){ return Pop-Falsy -DBNull:$DBNull }
+    if (Test-Falsy $InputObject) { return $null }
 
     $DT = Get-Date -Date $InputObject
     [string]$DateTime = $DT.Year.ToString() + '-'
@@ -21,6 +18,6 @@ Function Format-DateTime {
     [string]$DateTime += $DT.Second.ToString() 
     $DateTime = Protect-Sql $DateTime
 
-    return Pop-Falsy $DateTime -DBNull:$DBNull
+    return Pop-Falsy $DateTime
 }
 

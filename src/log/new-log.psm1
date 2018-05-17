@@ -1,8 +1,5 @@
 #beta
 
-
-Import-Module "$PSScriptRoot\..\tsql\invoke-tsql"
-
 class log {
     $Svc
     $Func
@@ -176,5 +173,115 @@ function New-log {
 }
 
 
+
+
+
+
+function write-log {
+
+    Param(
+        $Message,
+
+        [switch]
+        $verbosely = $true,
+        
+        [string]
+        $type,
+        
+        [switch]
+        $bouble
+    )
+    if(!$verbosely){return}
+    
+    $write = @{}
+
+    switch ( $type ) {
+
+        'start' { 
+ 
+            $write.ForegroundColor = 'black'
+            $write.BackgroundColor = 'DarkCyan'
+            $Write.Object = "`n`0Starting`0$Message`0"
+            break
+        }
+        'end' { 
+   
+            $write.ForegroundColor = 'black'
+            $write.BackgroundColor = 'gray'
+            $Write.Object = "`0Ending`0$Message`0`n"
+            break
+        }
+        'time' { 
+            if ($bouble) {
+                $write.ForegroundColor = 'white'
+                $write.BackgroundColor = 'magenta'
+            }
+            else {
+                $write.ForegroundColor = 'magenta'
+            }
+            break
+        }
+        'success' { 
+            if ($bouble) {
+                $write.ForegroundColor = 'black'
+                $write.BackgroundColor = 'green'
+            }
+            else {
+                $write.ForegroundColor = 'green'
+            }
+            break
+        } 
+        'fail' { 
+            if ($bouble) {
+                $write.ForegroundColor = 'black'
+                $write.BackgroundColor = 'red'
+            }
+            else {
+                $write.ForegroundColor = 'red'
+            }
+            break
+        }
+        'note' { 
+            if ($bouble) {
+                $write.ForegroundColor = 'black'
+                $write.BackgroundColor = 'white'
+            }
+            else {
+                $write.ForegroundColor = 'white'
+            }
+            break
+        }
+        'alert' { 
+            if ($bouble) {
+                $write.ForegroundColor = 'black'
+                $write.BackgroundColor = 'yellow'
+            }
+            else {
+                $write.ForegroundColor = 'yellow'
+            }
+            break
+        }
+    }
+   
+
+
+
+
+
+    # object
+    if ($Message -is [hashtable]) {
+        $Write.Object = format-hashtable $Message
+        $Write.Separator = "`n"
+    }
+    else {
+        $Write.Object = $Message
+    }
+
+    # write
+    Write-Host @write
+
+
+
+}
 
 

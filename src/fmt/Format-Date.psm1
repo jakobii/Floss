@@ -5,17 +5,14 @@
 Function Format-Date {
     param(
         [parameter(Mandatory = $true, ValueFromPipeline)]
-        $InputObject,
-
-        [switch]
-        $DBNull
+        $InputObject
     )
 
-    if(Test-Falsy $InputObject){ return Pop-Falsy -DBNull:$DBNull }
+    if (Test-Falsy $InputObject) { return $null }
 
     [string]$OutputObject = $(Get-Date -Date $InputObject).ToShortDateString()
 
-    return Pop-Falsy $OutputObject -DBNull:$DBNull
+    return Pop-Falsy $OutputObject
 }
 
 

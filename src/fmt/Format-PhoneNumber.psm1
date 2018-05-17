@@ -4,12 +4,9 @@
 FUNCTION Format-PhoneNumber {
     param(
         [parameter(Mandatory = $true, ValueFromPipeline)]
-        $InputObject,
-
-        [switch]
-        $DBNull
+        $InputObject
     )
-    if(Test-Falsy $InputObject){ return Pop-Falsy -DBNull:$DBNull }
+    if (Test-Falsy $InputObject) { return $null }
 
     # Check if the Value has numbers in it
     # if it does not contain numbers return null
@@ -72,7 +69,7 @@ FUNCTION Format-PhoneNumber {
         }
     }
 
-    return Pop-Falsy $OutputObject -DBNull:$DBNull
+    return Pop-Falsy $OutputObject
 }
 
 

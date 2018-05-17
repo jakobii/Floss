@@ -6,9 +6,8 @@
 FUNCTION Assert-String($InputObject, [string]$Expect, [string]$Tag) {
 
     Write-Start
+    Write-Alert $Tag
     $log = @{}
-    $log.Tag = $Tag
-    
 
     # Success 
     if ($InputObject -eq $Expect) {
