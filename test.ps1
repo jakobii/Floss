@@ -1,3 +1,6 @@
+import-module "$PSScriptRoot\inquiry.psm1"
+
+
 # Get all the things
 [array]$items = Get-ChildItem "$PSScriptRoot\test" -Recurse
 foreach ( $item in $items) {
@@ -15,4 +18,4 @@ foreach ( $item in $items) {
         }
     }
 }
- 
+

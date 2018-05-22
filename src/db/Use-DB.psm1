@@ -61,9 +61,6 @@ FUNCTION Use-DB {
         $OnError,
 
         [string]
-        $ResourceID,
-
-        [string]
         $Server,
 
         [string]
@@ -83,22 +80,6 @@ FUNCTION Use-DB {
 
     # GENERAL PARAMS
     [hashtable]$DB = @{}
-    if ($ResourceID) {
-        $Resource = Get-Resource -ID $ResourceID -CallStack 3
-        if ( Test-Falsy $Resource.Server -af ) {
-            $DB.Server = $Resource.Server
-        }
-        if ( Test-Falsy $Resource.Database -af) {
-            $DB.Database = $Resource.Database
-        }
-        if ( Test-Falsy $Resource.Username -af) {
-            $DB.Username = $Resource.Username
-        }
-        if ( Test-Falsy $Resource.Password -af) {
-            $DB.Password = $Resource.Password
-        }
-        $DB.Verbosely = $Verbosely
-    }
 
     if ($Server) {
         $DB.Server = $Server
@@ -140,9 +121,6 @@ FUNCTION Use-DB {
         if ($OnError) { $DB.OnError = $OnError } # [fix] add to publish table functions
         $Data = Invoke-TSQL @DB
     }
-
-
-
 
 
 

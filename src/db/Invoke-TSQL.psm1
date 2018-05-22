@@ -23,9 +23,9 @@ FUNCTION Invoke-TSQL {
         [string]
         $Password,
 
-        [parameter(ParameterSetName = "Integrated", mandatory = $true)]
+        [parameter(ParameterSetName = "Integrated")]
         [switch]
-        $Integrated_Security,
+        $Integrated_Security = $true,
 
         [parameter(mandatory = $true, ValueFromPipeline = $true)]
         [string]

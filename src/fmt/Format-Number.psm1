@@ -2,7 +2,7 @@
 
 
 
-function Format-Int {
+function Format-Number {
     param(
         [parameter(Mandatory = $true, ValueFromPipeline)]
         $InputObject

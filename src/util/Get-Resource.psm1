@@ -16,9 +16,14 @@ FUNCTION Get-Resource {
         $Path,
 
         [int]
-        $CallStack = 2
+        $CallStack = 2,
+
+        [switch]
+        $Verbosely
     )
 
+
+    $starttime = write-start -Verbosely:$Verbosely -OutTime
 
     # RESOLVE PATH
     if ($Path) {
@@ -101,6 +106,8 @@ FUNCTION Get-Resource {
         foreach ($Resource in $Resources) {
             if ( $Resource.ID -eq $ID ) {
                 $OutputObject = $Resource
+                Write-Success @{path = $JSON_PATH; id = $ID;}
+                break
             }
         }
     }
@@ -114,5 +121,6 @@ FUNCTION Get-Resource {
         }
     }
 
+    Write-End -StartTime $starttime
     Return Pop-Falsy $OutputObject
 }

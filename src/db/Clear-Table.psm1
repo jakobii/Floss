@@ -1,6 +1,6 @@
 
 
-function Remove-Table {
+function Clear-Table {
     param(
         [parameter(mandatory = $true)]
         [string]$Server, 
@@ -40,14 +40,14 @@ function Remove-Table {
     }
     
     $StartTime = get-date
-    write-start -message 'Remove-table' -Verbosely:$Verbosely
+    write-start -Verbosely:$Verbosely
     $Params = @{}
-    $Params.Query = "DROP TABLE IF EXISTS [$Schema].[$Table]"
+    $Params.Query = "if exists ( select top 1 * from [$Schema].[$Table]) begin delete from [$Schema].[$Table] end;"
 
     $Params.Server = $Server
     $Params.Database = $Database
     $Params.OutNull = $true
-    $Params.OnSuccess = {write-success -message 'Table Dropped' -Verbosely:$Verbosely}
+    $Params.OnSuccess = {write-success -message 'Table Cleared' -Verbosely:$Verbosely}
     $Params.OnError = {PARAM($SQLCMD, $ERR); write-fail -message $ERR -Verbosely:$Verbosely}
     
     if ($Username -and $Password) {
@@ -64,7 +64,7 @@ function Remove-Table {
     Invoke-TSQL @Params
 
     write-time -start $StartTime -Verbosely:$Verbosely
-    write-end -message 'Remove-table'  -Verbosely:$Verbosely
+    write-end -Verbosely:$Verbosely
 }
 
 

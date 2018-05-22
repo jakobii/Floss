@@ -12,12 +12,12 @@ FUNCTION  ConvertTo-DataRows {
         [string]
         $TableName,
 
-        [hashtable]
+        [System.Collections.Specialized.OrderedDictionary]
         $Columns,
     
         # array of rows
         # each row is a hashtables
-        [array] 
+        [system.array] 
         $Rows,
 
         [switch]
@@ -53,34 +53,44 @@ FUNCTION  ConvertTo-DataRows {
     [int]$TotalRows = $Rows.Length
     [int]$I = 0
 
-    FOREACH ($Row in $Rows) {
+    for ( $i = 0 ; $i -lt $TotalRows; $i++) {
+
+        #check if row is null before adding
+        if (test-falsy $Rows[$i]) { 
+            continue 
+        }
+        
+        $RowObject = $Rows[$i]
+
         $NewRow = $DATATABLE.NewRow()
         
         # add each value the row column
-        FOREACH ($key in $Row.keys) {
-            $RowValue = $Row.$key
+        FOREACH ( $ColumnName in $Columns.keys ) {
+            $RowValue = $RowObject.$ColumnName
+
+            # convert to datatype 
+            $dayatype = $Columns.$ColumnName
+
+            $Converted_Row_Value = ConvertTo-Type -Type $dayatype -InputObject $RowValue -DBNull
 
             # attemp to add the value to the row
-            try {$NewRow.$key = $RowValue}
+            try {$NewRow.$ColumnName = $Converted_Row_Value}
             catch {
                 write-fail "Could not add value to row. $PSItem" -Verbosely:$Verbosely
             }
         }
         
         # Percentage Completed
-        $I++
-        $P = ($I/$TotalRows)*100
-        Write-Progress -Activity "Converting rows" -Status "$P% Complete:" -PercentComplete $P -Id 600
-
-
-        # Add Table to row
+        Show-Progress -Goal $TotalRows -step $($I + 1) -Tag 'Convert Rows to type [DataRows]' -id 52
+        
+        # mass Add rows to Table
         [void]$DATATABLE.Rows.Add($NewRow)
     }
 
-    if($AsTable){
+    if ($AsTable) {
         RETURN $DATATABLE[0].table
     }
-    else{
+    else {
         RETURN $DATATABLE
     }
 }

@@ -2,7 +2,7 @@ Function Test-Falsy {
     param(
     
         # the value you would like to check for null
-        [parameter(Mandatory = $true,ValueFromPipeline)]
+        [parameter(Mandatory = $true, ValueFromPipeline)]
         [AllowNull()]
         [alias("o")]    
         $InputObject, 
@@ -42,29 +42,34 @@ Function Test-Falsy {
         [boolean]$Falsy = $True 
     }
     # int
-    if ($InputObject -is [int]) {
+    elseif ($InputObject -is [int]) {
         if ($InputObject -eq 0) {
             [boolean]$Falsy = $True
         }
     }
     # Float
-    if ($InputObject -is [float]) {
+    elseif ($InputObject -is [float]) {
         if ($InputObject -eq 0) {
             [boolean]$Falsy = $True
         }
     }
     # String
-    if ($InputObject -is [String]) {
+    elseif ($InputObject -is [String]) {
         $log.CharCount = $InputObject.count
         if ($InputObject.Trim() -eq '') {
             [boolean]$Falsy = $True
         }
     }
-    if ($InputObject -is [char]) {
+    # char
+    elseif ($InputObject -is [char]) {
         if ($InputObject -eq ' ') {
             [boolean]$Falsy = $True
         }
     }
+    # Standard powershell falsy catching
+    elseif (!$InputObject) {
+        [boolean]$Falsy = $True
+    } 
 
     $log.Flasy = $Falsy
     Write-Note $log -Verbosely:$Verbosely

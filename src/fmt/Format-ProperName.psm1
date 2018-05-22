@@ -55,13 +55,6 @@ function format-ProperName {
             $Name = $eng.TextInfo.ToTitleCase($Name.tolower().trim())
             $Name = "Mc" + $Name
         }
-
-        # escape single quotes
-        "'" {
-            $regx = [regex]::new("'")
-            $Name = $regx.Replace($Name, "''")
-            Break
-        }
     }
     
     return Pop-Falsy $Name
