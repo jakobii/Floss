@@ -65,7 +65,7 @@ FUNCTION Invoke-TSQL {
     if ($Password) {
         [string]$Conn += "Password=$Password;"
     }
-    if ($Integrated_Security.IsPresent -or (!$Password -and !$Username) ) {
+    if ($Integrated_Security.IsPresent -and (!$Password -and !$Username) ) {
         [string]$Conn += "Integrated Security=SSPI;"
     }
 
