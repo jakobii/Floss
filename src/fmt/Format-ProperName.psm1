@@ -1,6 +1,6 @@
 
 
-function format-ProperName {
+function Format-ProperName {
     param(
         [parameter(Mandatory = $true, ValueFromPipeline)]
         [AllowNull()]

@@ -83,6 +83,3 @@ Function Test-Falsy {
     }
           
 }
-
-Set-Alias -Value Test-Falsy -Name tf
-Export-ModuleMember -Function Test-Falsy -Alias tf
