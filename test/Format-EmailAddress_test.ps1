@@ -1,6 +1,6 @@
 #unit
 
-import-module "$PSScriptRoot\..\inquiry.psm1"
+import-module "$PSScriptRoot\..\Inquiry.src.psm1"
 
 Format-EmailAddress 'Blah blah blah o-m-g_omg@omg.com rar!' | assert-string -expect 'o-m-g_omg@omg.com' -tag 'email in the middle of sentance'
 

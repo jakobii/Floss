@@ -1,6 +1,6 @@
 #unit
 
-import-module "$PSScriptRoot\..\inquiry.psm1"
+import-module "$PSScriptRoot\..\Inquiry.src.psm1"
 
 
 [string]$String = '2018-5-17' 

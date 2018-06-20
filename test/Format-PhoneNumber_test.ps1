@@ -1,6 +1,6 @@
 #unit
 
-import-module "$PSScriptRoot\..\inquiry.psm1"
+import-module "$PSScriptRoot\..\Inquiry.src.psm1"
 
 
 Format-PhoneNumber '3as3$@#344.()4#@!4' | Assert-String -Expect '333-4444' -Tag "Bad Character Removeral"

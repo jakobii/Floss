@@ -1,6 +1,6 @@
 #unit
 
-import-module "$PSScriptRoot\..\inquiry.psm1"
+import-module "$PSScriptRoot\..\Inquiry.src.psm1"
 
 $char = format-char '   great'
 Assert-String -InputObject $char -Expect 'g' -tag "first character of string, ingnore spaces"

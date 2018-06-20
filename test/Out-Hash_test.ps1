@@ -1,6 +1,6 @@
 #unit
 
-import-module "$PSScriptRoot\..\inquiry.psm1"
+import-module "$PSScriptRoot\..\Inquiry.src.psm1"
 
 
 Out-Hash 1234 | Assert-String -Expect '81DC9BDB52D04DC20036DBD8313ED055' -Tag 'MD5'

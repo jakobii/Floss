@@ -4,7 +4,7 @@ A remarkable powershell module that focuses on making data transformation simple
 ## Get Started
 ```powershell
 git clone https://github.com/jakobii/Inquiry.git
-import-module .\inquiry\inquiry.min.psm1
+import-module .\inquiry\inquiry.psm1
 ```
 
 #### Dependancies

@@ -1,5 +1,5 @@
 
-import-module "$PSScriptRoot\..\inquiry.psm1" -Verbose
+import-module "$PSScriptRoot\..\Inquiry.src.psm1" -Verbose
 
 $max = 10000
 
