@@ -1,5 +1,5 @@
-# Inquiry Powershell Module
-A remarkable powershell module for manipulating data that is writen in a functional manner and is made with Love ❤️
+# The Inquiry Powershell Module
+A remarkable powershell module that focuses on finding smart ways to manipulating data. Its written in a functional manner and is made with Love ❤️
 
 ## Get Started
 ```powershell
