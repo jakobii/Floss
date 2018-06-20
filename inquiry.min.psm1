@@ -1,8 +1,8 @@
 <#
 	Module    : Inquiry
-	Version   : 1.0.0
-	DateTime  : 06/20/2018 13:06:53
-	Functions : 65
+	Version   : 1.0.2
+	DateTime  : 06/20/2018 16:02:29
+	Functions : 66
 #>
 <# MANIFEST
 	Get-KeyChain
@@ -62,6 +62,7 @@
 	Out-Hash
 	Get-ModuleStatistics
 	Get-Resource
+	Get-type
 	Merge-Files
 	New-DBNull
 	New-String
@@ -1890,13 +1891,13 @@ FUNCTION ConvertTo-PSCustomObject {
 <#	ConvertTo-Type.psm1	#>
 function ConvertTo-Type {
     param(
-        [parameter(Mandatory = $true, ValueFromPipeline)]
-        [AllowNull()]
-        $InputObject,
         [parameter(Mandatory = $true)]
         [ValidateSet("int", "int32", "int64", "string", "char", "long", "double", "datetime", "bool", "boolean", "guid")]
         [string]
         $Type = 'string',
+        [parameter(Mandatory = $true, ValueFromPipeline)]
+        [AllowNull()]
+        $InputObject,
         [switch]
         $DBNull
     )
@@ -1981,7 +1982,7 @@ function Get-Function {
     return $FunctionInfo
 }
 
-<#	Out-Hash.psm1	#>
+<#	Get-Hash.psm1	#>
 function Out-Hash {
     param(
         [parameter(Mandatory = $true, ValueFromPipeline)]
@@ -2157,6 +2158,14 @@ FUNCTION Get-Resource {
     Return Pop-Falsy $OutputObject
 }
 
+<#	Get-Type.psm1	#>
+Function Get-type {
+    param(
+        [parameter(Mandatory = $true, ValueFromPipeline)]
+        $InputObject
+    )
+    $InputObject.GetType()
+}
 <#	Merge-Files.psm1	#>
 <#
 this function merges text files into a single array. each line is an index.
@@ -2237,6 +2246,7 @@ FUNCTION New-String {
     return Pop-Falsy $OutputObject
 }
 <#	Out-Unique.psm1	#>
+# by default 'A' and 'a' are NOT the same
 FUNCTION Out-Unique {
     param(
         [parameter(Mandatory = $true, ValueFromPipeline)]
@@ -2245,18 +2255,18 @@ FUNCTION Out-Unique {
         [switch]
         $Verbosely,
         [switch]
-        $CaseSensitive
+        $CaseInsensitive
     )
     $start = Write-Start -OutTime
     [array]$UniqueObjects = @()
-    if (!$CaseSensitive) {
+    if ($CaseInsensitive) {
         foreach ($index in $InputObject) {
             if ($UniqueObjects -notcontains $index) {
                 [array]$UniqueObjects += $index
             }
         }
     }
-    if ($CaseSensitive) {
+    if (!$CaseInsensitive) {
         foreach ($index in $InputObject) {
             if ($UniqueObjects -cnotcontains $index) {
                 [array]$UniqueObjects += $index

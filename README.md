@@ -1,10 +1,10 @@
 # The Inquiry Powershell Module
-A remarkable powershell module that focuses on finding smart ways to manipulating data. Its written in a functional manner and is made with Love ❤️
+A remarkable powershell module that focuses on making data transformation simple. Its written in a functional manner and is made with Love ❤️
 
 ## Get Started
 ```powershell
 git clone https://github.com/jakobii/Inquiry.git
-import-module .\inquiry\inquiry.psm1
+import-module .\inquiry\inquiry.min.psm1
 ```
 
 #### Dependancies
