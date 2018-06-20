@@ -3,20 +3,20 @@ FUNCTION Write-End {
     Param(
         $Message,
 
-        [datetime]
+        [Nullable[datetime]]
         $StartTime,
 
         [switch]
         $Verbosely = $true
     )  
-    if (!$Verbosely) {return}
-
+    $ParentFunc = Get-Function -CallStack 2
+    if ( !$Verbosely -or !$ParentFunc.Parameters.Verbosely ) {return}
+    if (!$Message) {[string]$Message = $ParentFunc.FunctionName}
 
     if ($startTime) {
         $time_span = New-TimeSpan -Start $startTime -End $(get-date)
         Write-Host "Timespan`0: $time_span"  -f Magenta
     }
 
-    if (!$Message) {[string]$Message = $(Get-PSCallStack)[1].FunctionName}
     Write-Host "`0Ending`0$Message`0`n" -f black -b Gray
 }

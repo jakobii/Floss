@@ -56,7 +56,7 @@ FUNCTION  ConvertTo-DataRows {
     for ( $i = 0 ; $i -lt $TotalRows; $i++) {
 
         #check if row is null before adding
-        if (test-falsy $Rows[$i]) { 
+        if (test-falsy $Rows[$i] -fast) { 
             continue 
         }
         

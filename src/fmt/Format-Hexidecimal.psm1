@@ -1,5 +1,6 @@
 #beta
 
+#currently this only converts btyes. need to convert string and ints before it can be added to module.
 
 Function Format-Hexidecimal {
     param(

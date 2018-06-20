@@ -1,30 +1,18 @@
-Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
+
 import-module "$PSScriptRoot\..\inquiry.psm1"
 
 
+Test-Falsy @($null, 0, '     ', [dbnull]::value )
 
-FUNCTION test-recurse ($value) {
-
-    if ($value -is [array]) {
-        [array]$blah = @()
-        foreach ($item in $value) {
-            $index = test-recurse $item
-            $blah.Add($index)
-        }
-        RETURN $blah
-    }
-    if ($value -is [char]){
-        Write-Host $value
-    }
+Test-Falsy @{num = 1; txt='some text'}
 
 
-}
+$n = 123 | ConvertTo-Type double
+$n.gettype()
 
-[char]$char1 = 'a'
-[char]$char2 = "b"
+Format-EmailAddress 'bad data some.complex_name@sub.domain.com more bad data?' 
 
-[array]$array = @($char2 , $char1 ) 
-
+Get-Type @('an','array')
 
 
-test-recurse $array
+Test-Falsy @($null, $null, $null )

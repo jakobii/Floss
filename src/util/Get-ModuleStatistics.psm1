@@ -10,19 +10,26 @@ FUNCTION Get-ModuleStatistics {
         if ($item.Extension -eq '.psm1') {
             [array]$lines = Get-Content -ReadCount 1 -Path $item.FullName
             
-            if ($lines -eq $null ) {
+            if ($lines -eq $null) {
                 [array]$Empty += $item.name
                 [int]$Empty_Count++ | out-null
             }
-            if ($lines[0].Trim() -eq '#beta') {
+            if ($lines -is [array]) {
+                [string]$all_lines = $lines[0..$($lines.Count - 1)]
+                if (test-falsy $all_lines) {
+                    [array]$Empty += $item.name
+                    [int]$Empty_Count++ | out-null
+                }
+                if ($lines[0].Trim() -eq '#beta') {
 
-                [array]$Beta += $item.name
-                [int]$Beta_count++ | out-null
-            }
-            if ($lines[0].Trim() -ne '#beta') {
+                    [array]$Beta += $item.name
+                    [int]$Beta_count++ | out-null
+                }
+                if ($lines[0].Trim() -ne '#beta') {
             
-                [array]$Production += $item.name
-                [int]$Production_Count++ | out-null
+                    [array]$Production += $item.name
+                    [int]$Production_Count++ | out-null
+                }
             }
         }
 

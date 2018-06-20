@@ -14,7 +14,12 @@ Function Test-Falsy {
         
         [alias("v")]
         [switch]
-        $Verbosely 
+        $Verbosely,
+
+        # assumes you intend to do a thorough check of complex
+        # objects unless explicitly stated otherwise
+        [switch]
+        $fast 
     ) 
 
     write-start -verbosely:$Verbosely
@@ -70,6 +75,53 @@ Function Test-Falsy {
     elseif (!$InputObject) {
         [boolean]$Falsy = $True
     } 
+
+    # Arrays
+    elseif ($InputObject -is [array]) {
+        try {
+            # try to can stringify the array. 
+            # faster then iterating and falsy's objects that are empty.
+            [string]$ConcatArray = $InputObject[0..$($InputObject.Count - 1)]
+            [boolean]$Falsy = test-falsy $ConcatArray
+        }
+        catch { 
+            # dont error out
+        }
+
+        # Deep checking. this could take a while.....
+        if (!$fast -and !$Falsy) {
+            [boolean]$Falsy = $true # until proven false
+            foreach ($index in $InputObject) {
+                if (test-falsy $index -af) {
+                    [boolean]$Falsy = $false
+                    break # stop check at first non-falsy value
+                }
+            }
+        }
+    }
+    # hashtables & OrderedDictionary
+    elseif ($InputObject -is [hashtable] -or $InputObject -is [System.Collections.Specialized.OrderedDictionary]) {
+        try {
+            # try to can stringify the array. 
+            # faster then iterating and falsy's objects that are empty.
+            [string]$ConcatArray = $InputObject.values
+            [boolean]$Falsy = test-falsy $ConcatArray
+        }
+        catch { 
+            # dont error out
+        }
+
+        if (!$fast -and !$Falsy) {
+            [boolean]$Falsy = $true # until proven false
+            foreach($key in $InputObject.keys){
+                $value = $InputObject.$key 
+                if(test-falsy $value -af){
+                    [boolean]$Falsy = $false
+                    break # stop check at first non-falsy value
+                }
+            }
+        }
+    }
 
     $log.Flasy = $Falsy
     Write-Note $log -Verbosely:$Verbosely

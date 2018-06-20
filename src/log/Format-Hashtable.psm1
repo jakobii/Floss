@@ -1,6 +1,6 @@
 
 
-FUNCTION format-hashtable {
+FUNCTION Format-HashtableAsList {
     Param(
         [hashtable]
         $Hashtable,

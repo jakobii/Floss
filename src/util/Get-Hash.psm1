@@ -1,5 +1,5 @@
 
-function Get-Hash {
+function Out-Hash {
     param(
         [parameter(Mandatory = $true, ValueFromPipeline)]
         $InputObject,
@@ -13,17 +13,15 @@ function Get-Hash {
         $Algorithm = 'MD5'
     )
 
-
-    switch ($Algorithm ) {
+    switch ($Algorithm) {
         'MD5' {$Cryptography = new-object System.Security.Cryptography.MD5CryptoServiceProvider} 
         'SHA256' {$Cryptography = new-object System.Security.Cryptography.SHA256Managed} 
         'SHA512' {$Cryptography = new-object System.Security.Cryptography.SHA512Managed} 
     }
-    
-    $Bytes = [System.Text.Encoding]::UTF8.GetBytes($InputObject)
-    $ByteArray = $Cryptography.ComputeHash($Bytes)
-    
 
+    # Sql Server returns utf8 hashes
+    $Bytes = [System.Text.Encoding]::utf8.GetBytes($InputObject)
+    $ByteArray = $Cryptography.ComputeHash($Bytes)
 
     switch ($OutputAs) {
         'byte' {

@@ -3,14 +3,14 @@
 
 function ConvertTo-Type {
     param(
-        [parameter(Mandatory = $true, ValueFromPipeline)]
-        [AllowNull()]
-        $InputObject,
-
         [parameter(Mandatory = $true)]
         [ValidateSet("int", "int32", "int64", "string", "char", "long", "double", "datetime", "bool", "boolean", "guid")]
         [string]
         $Type = 'string',
+
+        [parameter(Mandatory = $true, ValueFromPipeline)]
+        [AllowNull()]
+        $InputObject,
 
         [switch]
         $DBNull

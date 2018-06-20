@@ -23,7 +23,7 @@ FUNCTION Write-Alert {
 
     # object
     if ($Message -is [hashtable]) {
-        $Write.Object = format-hashtable $Message
+        $Write.Object = Format-HashtableAsList  $Message
         $Write.Separator = "`n"
     }
     else {

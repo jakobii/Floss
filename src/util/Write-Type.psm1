@@ -7,3 +7,7 @@ FUNCTION Write-Type ($Value, $Tag){
     write-host  "Base  : $($typ.BaseType.Name)" -f y
     write-host  "Tag   : $Tag" -f y
 }
+
+
+
+

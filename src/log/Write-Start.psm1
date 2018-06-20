@@ -8,13 +8,21 @@ FUNCTION Write-Start {
         [switch]
         $OutTime
     )
-    if(!$Verbosely){return}
-    if (!$Message) {[string]$Message = Get-FunctionName -callstack 2}
+
+    $ParentFunc = Get-Function -CallStack 2
+    if ( !$Verbosely -or !$ParentFunc.Parameters.Verbosely ) {return}
+    if (!$Message) {[string]$Message = $ParentFunc.FunctionName}
+
+        
     Write-Host "`n`0Starting`0$Message`0" -f black -b DarkCyan
-    
-    if($OutTime){
+
+    if ($OutTime) {
         $StartTime = get-date
         return $StartTime 
     }
 
 }
+
+
+
+

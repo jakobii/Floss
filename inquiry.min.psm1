@@ -1,8 +1,8 @@
 <#
 	Module    : Inquiry
 	Version   : 1.0.0
-	DateTime  : 05/23/2018 02:08:37
-	Functions : 61
+	DateTime  : 06/20/2018 13:06:53
+	Functions : 65
 #>
 <# MANIFEST
 	Get-KeyChain
@@ -24,13 +24,14 @@
 	Format-Date
 	Format-DateTime
 	Format-DateTime2
+	Format-Decimal
 	Format-EmailAddress
 	Format-Number
 	Format-PhoneNumber
 	Format-ProperName
 	Format-Suffix
 	Format-TitleCase
-	format-hashtable
+	Format-HashtableAsList
 	Get-FunctionName
 	Send-DiscordMessage
 	Show-Progress
@@ -41,27 +42,30 @@
 	Write-Start
 	Write-Success
 	Write-Time
-	ConvertTo-Decimal
+	ConvertFrom-Percentage
 	Get-Max
 	Get-Sum
 	ConvertTo-DirectoryInfoArray
 	Import-Config
 	Import-Script
-	Merge-Files
 	New-Path
 	Out-Csv
 	Find-Directory
 	Get-SftpFile
 	Assert-Boolean
 	Assert-String
+	Assert-type
 	Compress-Modules
+	ConvertTo-PSCustomObject
 	ConvertTo-Type
 	Get-Function
-	Get-Hash
+	Out-Hash
 	Get-ModuleStatistics
 	Get-Resource
+	Merge-Files
 	New-DBNull
 	New-String
+	Out-Unique
 	Pop-Falsy
 	Pop-Null
 	Protect-Sql
@@ -315,7 +319,7 @@ FUNCTION  ConvertTo-DataRows {
     [int]$I = 0
     for ( $i = 0 ; $i -lt $TotalRows; $i++) {
         #check if row is null before adding
-        if (test-falsy $Rows[$i]) { 
+        if (test-falsy $Rows[$i] -fast) { 
             continue 
         }
         $RowObject = $Rows[$i]
@@ -930,6 +934,28 @@ Function Format-DateTime2 {
     return Pop-Falsy $OutputObject
 }
 
+<#	Format-Decimal.psm1	#>
+function Format-Decimal {
+    param(
+        [parameter(Mandatory = $true, ValueFromPipeline)]
+        $InputObject
+    )
+    if (Test-Falsy $InputObject) { return $null }
+    [string]$decimal = ''
+    $decimalPointNotUsed = $true
+    foreach ($char in $InputObject.ToCharArray()) {
+        [string]$str = $char
+        if ($str -match '^\d$') {
+            [string]$decimal += $str
+        }
+        if ($str -match '^[.]$' -and $decimalPointNotUsed ) {
+            [string]$decimal += $str
+            $decimalPointNotUsed = $false
+        }
+    }
+    return Pop-Falsy $decimal
+}
+
 <#	Format-EmailAddress.psm1	#>
 FUNCTION Format-EmailAddress {
     param(
@@ -1119,7 +1145,7 @@ FUNCTION Format-TitleCase  {
     return Pop-Falsy $OutputObject 
 }
 <#	Format-Hashtable.psm1	#>
-FUNCTION format-hashtable {
+FUNCTION Format-HashtableAsList {
     Param(
         [hashtable]
         $Hashtable,
@@ -1222,7 +1248,7 @@ Function Show-Progress {
     Write-Progress -Activity $Tag -Status "Complete: $Progress_double%" -PercentComplete $Progress_double -Id $ID
 }
 
-<#	Write-alter.psm1	#>
+<#	Write-Alert.psm1	#>
 FUNCTION Write-Alert {
     Param(
         $Message,
@@ -1243,7 +1269,7 @@ FUNCTION Write-Alert {
     }
     # object
     if ($Message -is [hashtable]) {
-        $Write.Object = format-hashtable $Message
+        $Write.Object = Format-HashtableAsList  $Message
         $Write.Separator = "`n"
     }
     else {
@@ -1257,17 +1283,18 @@ FUNCTION Write-Alert {
 FUNCTION Write-End {
     Param(
         $Message,
-        [datetime]
+        [Nullable[datetime]]
         $StartTime,
         [switch]
         $Verbosely = $true
     )  
-    if (!$Verbosely) {return}
+    $ParentFunc = Get-Function -CallStack 2
+    if ( !$Verbosely -or !$ParentFunc.Parameters.Verbosely ) {return}
+    if (!$Message) {[string]$Message = $ParentFunc.FunctionName}
     if ($startTime) {
         $time_span = New-TimeSpan -Start $startTime -End $(get-date)
         Write-Host "Timespan`0: $time_span"  -f Magenta
     }
-    if (!$Message) {[string]$Message = $(Get-PSCallStack)[1].FunctionName}
     Write-Host "`0Ending`0$Message`0`n" -f black -b Gray
 }
 
@@ -1292,7 +1319,7 @@ FUNCTION Write-Fail {
     }
     # object
     if ($Message -is [hashtable]) {
-        $Write.Object = format-hashtable $Message
+        $Write.Object = Format-HashtableAsList $Message
         $Write.Separator = "`n"
     }
     else {
@@ -1310,7 +1337,8 @@ FUNCTION Write-Note {
         [switch]
         $bouble
     )
-    if(!$verbosely){return}
+    $ParentFunc = Get-Function -CallStack 2
+    if ( !$Verbosely -or !$ParentFunc.Parameters.Verbosely ) {return}
     $write = @{}
     # color
     if ($bouble) {
@@ -1322,7 +1350,7 @@ FUNCTION Write-Note {
     }
     # object
     if ($Message -is [hashtable]) {
-        $Write.Object = format-hashtable $Message
+        $Write.Object = Format-HashtableAsList  $Message
         $Write.Separator = "`n"
     }
     else {
@@ -1341,10 +1369,11 @@ FUNCTION Write-Start {
         [switch]
         $OutTime
     )
-    if(!$Verbosely){return}
-    if (!$Message) {[string]$Message = Get-FunctionName -callstack 2}
+    $ParentFunc = Get-Function -CallStack 2
+    if ( !$Verbosely -or !$ParentFunc.Parameters.Verbosely ) {return}
+    if (!$Message) {[string]$Message = $ParentFunc.FunctionName}
     Write-Host "`n`0Starting`0$Message`0" -f black -b DarkCyan
-    if($OutTime){
+    if ($OutTime) {
         $StartTime = get-date
         return $StartTime 
     }
@@ -1371,7 +1400,7 @@ FUNCTION Write-Success {
     }
     # object
     if ($Message -is [hashtable]) {
-        $Write.Object = format-hashtable $Message
+        $Write.Object = Format-HashtableAsList  $Message
         $Write.Separator = "`n"
     }
     else {
@@ -1394,11 +1423,14 @@ FUNCTION Write-Time {
     Write-Host "Timespan`0: $time_span"  -f Magenta
 }
 
-<#	ConvertTo-Decimal.psm1	#>
-function ConvertTo-Decimal {
+<#	ConvertFrom-Percentage.psm1	#>
+function ConvertFrom-Percentage {
     param(
-        [double]$Percentage
+        [parameter(Mandatory = $true, ValueFromPipeline)]
+        [string]
+        $InputObject
     )
+    [double]$Percentage = Format-Decimal $InputObject
     if ($Percentage) {
         $Decimal = $Percentage / 100
         return $Decimal
@@ -1481,49 +1513,6 @@ FUNCTION Import-Script ($path) {
     return $Script
 }
 
-<#	Merge-Files.psm1	#>
-FUNCTION Merge-Files ($Path, $Extension, [int]$depth) {
-    # validate path
-    if ( !$(Test-Path $Path) ) {
-        write-fail "$(Get-FunctionName): Could Not Find Path"
-        Return 
-    }
-    # Get all the items recursively
-    $GetChildItem = @{}
-    $GetChildItem.Path = $Path 
-    $GetChildItem.Recurse = $true
-    if($depth){$GetChildItem.depth = $depth}
-    $ChildItems = Get-ChildItem @GetChildItem
-    # only keep files
-    [array]$items = @()
-    foreach ($ChildItem in $ChildItems) {
-        if ( !$($ChildItem -is [System.IO.DirectoryInfo]) ) {
-            [array]$items += $ChildItem
-        }
-    }
-    [array]$LINE_ARRAY = @()
-    [array]$FILES = @()
-    # choose files
-    FOREACH ($item in $items) {
-        # filter by extension
-        if ($Extention -and $item.Extension -eq $Extension) {
-            [array]$FILES += $item.fullname
-            CONTINUE
-        }
-        # catch all
-        if (!$Extention) {
-            [array]$FILES += $item.fullname
-            CONTINUE
-        }
-    }
-    # Add file data to line array
-    FOREACH ($FILE in $FILES) {
-        [array]$FILE_ARRAY = Get-Content -Path $FILE
-        #kinda funy logic here but we are just combining two arrays
-        [array]$LINE_ARRAY += [array]$FILE_ARRAY 
-    }
-    RETURN $LINE_ARRAY
-}
 <#	New-Path.psm1	#>
 FUNCTION New-Path {
     param(
@@ -1786,6 +1775,49 @@ FUNCTION Assert-String {
     Write-End
 }
 
+<#	Assert-Type.psm1	#>
+FUNCTION Assert-type {
+    PARAM(
+        [parameter(Mandatory = $true, ValueFromPipeline)]
+        [AllowNull()]
+        [AllowEmptyString()]
+        $InputObject, 
+        [AllowNull()]
+        $Expect, 
+        [string]
+        $Tag
+    )
+    Write-Start
+    Write-Alert $Tag
+    $log = @{}
+    # Success 
+    [string]$type = $InputObject.GetType()
+    if ( $type -eq $Expect ){
+        $Success = $true
+    }
+    else {
+        $Success = $false
+    }
+    #type 
+    if ($InputObject -eq $null ) {
+        $log.Datatype = 'null'
+    }
+    else {
+        $log.DataType = $InputObject.GetType()
+        $log.TypeBase = $($InputObject.GetType()).BaseType.Name
+    }
+    $log.Success = $Success
+    $log.Expected = $Expect
+    $log.InputObeject = $InputObject
+    if ($Success) {
+        Write-Success $log 
+    }
+    else {
+        Write-Fail $log
+    }
+    Write-End
+}
+
 <#	Compress-Modules.psm1	#>
 function Compress-Modules {
     param(
@@ -1838,6 +1870,21 @@ function Compress-Modules {
     }
     [string]$everything = $header + $manifest + $("`r`n" * 5) + $module_content
     new-item -Path $destination -Value $everything -Force
+}
+
+<#	ConvertTo-PSCustomObject.psm1	#>
+FUNCTION ConvertTo-PSCustomObject {
+    param(
+        [parameter(Mandatory = $true, ValueFromPipeline)]
+        $Inputobject
+    )
+    $psobject = New-Object -TypeName 'PSCustomObject'
+    if ($Inputobject -is [hashtable] -or $Inputobject -is [System.Collections.Specialized.OrderedDictionary]) {
+        foreach ($key in $Inputobject.keys) {
+            $psobject | Add-Member -MemberType 'NoteProperty' -Name $key -Value $Inputobject.$key 
+        }
+    }
+    return $psobject
 }
 
 <#	ConvertTo-Type.psm1	#>
@@ -1934,8 +1981,8 @@ function Get-Function {
     return $FunctionInfo
 }
 
-<#	Get-Hash.psm1	#>
-function Get-Hash {
+<#	Out-Hash.psm1	#>
+function Out-Hash {
     param(
         [parameter(Mandatory = $true, ValueFromPipeline)]
         $InputObject,
@@ -1946,12 +1993,13 @@ function Get-Hash {
         [string]
         $Algorithm = 'MD5'
     )
-    switch ($Algorithm ) {
+    switch ($Algorithm) {
         'MD5' {$Cryptography = new-object System.Security.Cryptography.MD5CryptoServiceProvider} 
         'SHA256' {$Cryptography = new-object System.Security.Cryptography.SHA256Managed} 
         'SHA512' {$Cryptography = new-object System.Security.Cryptography.SHA512Managed} 
     }
-    $Bytes = [System.Text.Encoding]::UTF8.GetBytes($InputObject)
+    # Sql Server returns utf8 hashes
+    $Bytes = [System.Text.Encoding]::utf8.GetBytes($InputObject)
     $ByteArray = $Cryptography.ComputeHash($Bytes)
     switch ($OutputAs) {
         'byte' {
@@ -1979,17 +2027,24 @@ FUNCTION Get-ModuleStatistics {
         # filter the modules
         if ($item.Extension -eq '.psm1') {
             [array]$lines = Get-Content -ReadCount 1 -Path $item.FullName
-            if ($lines -eq $null ) {
+            if ($lines -eq $null) {
                 [array]$Empty += $item.name
                 [int]$Empty_Count++ | out-null
             }
-            if ($lines[0].Trim() -eq '#beta') {
-                [array]$Beta += $item.name
-                [int]$Beta_count++ | out-null
-            }
-            if ($lines[0].Trim() -ne '#beta') {
-                [array]$Production += $item.name
-                [int]$Production_Count++ | out-null
+            if ($lines -is [array]) {
+                [string]$all_lines = $lines[0..$($lines.Count - 1)]
+                if (test-falsy $all_lines) {
+                    [array]$Empty += $item.name
+                    [int]$Empty_Count++ | out-null
+                }
+                if ($lines[0].Trim() -eq '#beta') {
+                    [array]$Beta += $item.name
+                    [int]$Beta_count++ | out-null
+                }
+                if ($lines[0].Trim() -ne '#beta') {
+                    [array]$Production += $item.name
+                    [int]$Production_Count++ | out-null
+                }
             }
         }
     }
@@ -2102,13 +2157,67 @@ FUNCTION Get-Resource {
     Return Pop-Falsy $OutputObject
 }
 
+<#	Merge-Files.psm1	#>
+<#
+this function merges text files into a single array. each line is an index.
+#>
+FUNCTION Merge-Files {
+    param( 
+        [System.IO.DirectoryInfo]
+        $Path,
+        [string]
+        $Extension,
+        [int]
+        $depth
+    )
+    # validate path
+    if ( !$(Test-Path $Path) ) {
+        write-fail "$(Get-FunctionName): Could Not Find Path"
+        Return 
+    }
+    # Get all the items recursively
+    $GetChildItem = @{}
+    $GetChildItem.Path = $Path 
+    $GetChildItem.Recurse = $true
+    if ($depth) {$GetChildItem.depth = $depth}
+    $ChildItems = Get-ChildItem @GetChildItem
+    # only keep files
+    [array]$items = @()
+    foreach ($ChildItem in $ChildItems) {
+        if ( !$($ChildItem -is [System.IO.DirectoryInfo]) ) {
+            [array]$items += $ChildItem
+        }
+    }
+    [array]$LINE_ARRAY = @()
+    [array]$FILES = @()
+    # choose files
+    FOREACH ($item in $items) {
+        # filter by extension
+        if ($Extention -and $item.Extension -eq $Extension) {
+            [array]$FILES += $item.fullname
+            CONTINUE
+        }
+        # catch all
+        if (!$Extention) {
+            [array]$FILES += $item.fullname
+            CONTINUE
+        }
+    }
+    # Add file data to line array
+    FOREACH ($FILE in $FILES) {
+        [array]$FILE_ARRAY = Get-Content -Path $FILE
+        #kinda funy logic here but we are just combining two arrays
+        [array]$LINE_ARRAY += [array]$FILE_ARRAY 
+    }
+    RETURN $LINE_ARRAY
+}
 <#	New-DBNull.psm1	#>
 function New-DBNull {
     $DBNull = $([System.DBNull]::Value)
     return $DBNull 
 }
 
-<#	new-string.psm1	#>
+<#	New-String.psm1	#>
 FUNCTION New-String {
     param(
         [parameter(Mandatory = $true, ValueFromPipeline)]
@@ -2127,6 +2236,41 @@ FUNCTION New-String {
     }
     return Pop-Falsy $OutputObject
 }
+<#	Out-Unique.psm1	#>
+FUNCTION Out-Unique {
+    param(
+        [parameter(Mandatory = $true, ValueFromPipeline)]
+        [array]
+        $InputObject,
+        [switch]
+        $Verbosely,
+        [switch]
+        $CaseSensitive
+    )
+    $start = Write-Start -OutTime
+    [array]$UniqueObjects = @()
+    if (!$CaseSensitive) {
+        foreach ($index in $InputObject) {
+            if ($UniqueObjects -notcontains $index) {
+                [array]$UniqueObjects += $index
+            }
+        }
+    }
+    if ($CaseSensitive) {
+        foreach ($index in $InputObject) {
+            if ($UniqueObjects -cnotcontains $index) {
+                [array]$UniqueObjects += $index
+            }
+        }
+    }
+    $log = @{}
+    $log.Recieved_Objects = $InputObject.Count
+    $log.Unique_Objects = $UniqueObjects.Count
+    Write-Note $log
+    write-end -StartTime $start
+    return $UniqueObjects 
+}
+
 <#	Pop-Falsy.psm1	#>
 # Returns null if the InputObject evaluates to falsy
 FUNCTION Pop-Falsy {
@@ -2198,7 +2342,11 @@ Function Test-Falsy {
         $asFalse, 
         [alias("v")]
         [switch]
-        $Verbosely 
+        $Verbosely,
+        # assumes you intend to do a thorough check of complex
+        # objects unless explicitly stated otherwise
+        [switch]
+        $fast 
     ) 
     write-start -verbosely:$Verbosely
     [hashtable]$log = @{}
@@ -2246,6 +2394,50 @@ Function Test-Falsy {
     elseif (!$InputObject) {
         [boolean]$Falsy = $True
     } 
+    # Arrays
+    elseif ($InputObject -is [array]) {
+        try {
+            # try to can stringify the array. 
+            # faster then iterating and falsy's objects that are empty.
+            [string]$ConcatArray = $InputObject[0..$($InputObject.Count - 1)]
+            [boolean]$Falsy = test-falsy $ConcatArray
+        }
+        catch { 
+            # dont error out
+        }
+        # Deep checking. this could take a while.....
+        if (!$fast -and !$Falsy) {
+            [boolean]$Falsy = $true # until proven false
+            foreach ($index in $InputObject) {
+                if (test-falsy $index -af) {
+                    [boolean]$Falsy = $false
+                    break # stop check at first non-falsy value
+                }
+            }
+        }
+    }
+    # hashtables & OrderedDictionary
+    elseif ($InputObject -is [hashtable] -or $InputObject -is [System.Collections.Specialized.OrderedDictionary]) {
+        try {
+            # try to can stringify the array. 
+            # faster then iterating and falsy's objects that are empty.
+            [string]$ConcatArray = $InputObject.values
+            [boolean]$Falsy = test-falsy $ConcatArray
+        }
+        catch { 
+            # dont error out
+        }
+        if (!$fast -and !$Falsy) {
+            [boolean]$Falsy = $true # until proven false
+            foreach($key in $InputObject.keys){
+                $value = $InputObject.$key 
+                if(test-falsy $value -af){
+                    [boolean]$Falsy = $false
+                    break # stop check at first non-falsy value
+                }
+            }
+        }
+    }
     $log.Flasy = $Falsy
     Write-Note $log -Verbosely:$Verbosely
     write-end -verbosely:$Verbosely

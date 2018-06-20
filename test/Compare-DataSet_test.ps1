@@ -7,7 +7,7 @@ $DataTable_Parameters = @{
     TableName = 'employees'
 
     # define column names thier datatypes
-    Columns   = @{ id = 'int'; fn = 'string' ; hd = 'datetime'}
+    Columns   = [ordered] @{ id = 'int'; fn = 'string' ; hd = 'datetime'}
     
     # A simple array of hashtables
     Rows      = @(

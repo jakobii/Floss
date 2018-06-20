@@ -1,5 +1,19 @@
 
-FUNCTION Merge-Files ($Path, $Extension, [int]$depth) {
+<#
+this function merges text files into a single array. each line is an index.
+#>
+
+FUNCTION Merge-Files {
+    param( 
+        [System.IO.DirectoryInfo]
+        $Path,
+
+        [string]
+        $Extension,
+
+        [int]
+        $depth
+    )
     
     
     # validate path
@@ -13,7 +27,7 @@ FUNCTION Merge-Files ($Path, $Extension, [int]$depth) {
     $GetChildItem = @{}
     $GetChildItem.Path = $Path 
     $GetChildItem.Recurse = $true
-    if($depth){$GetChildItem.depth = $depth}
+    if ($depth) {$GetChildItem.depth = $depth}
     $ChildItems = Get-ChildItem @GetChildItem
     
 

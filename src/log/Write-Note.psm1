@@ -8,7 +8,9 @@ FUNCTION Write-Note {
         [switch]
         $bouble
     )
-    if(!$verbosely){return}
+    $ParentFunc = Get-Function -CallStack 2
+    if ( !$Verbosely -or !$ParentFunc.Parameters.Verbosely ) {return}
+
     $write = @{}
     
     # color
@@ -22,7 +24,7 @@ FUNCTION Write-Note {
 
     # object
     if ($Message -is [hashtable]) {
-        $Write.Object = format-hashtable $Message
+        $Write.Object = Format-HashtableAsList  $Message
         $Write.Separator = "`n"
     }
     else {
