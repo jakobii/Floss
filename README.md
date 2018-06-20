@@ -8,14 +8,16 @@ import-module .\inquiry\inquiry.psm1
 ```
 
 #### Dependancies
- - [SqlServer](https://docs.microsoft.com/en-us/sql/powershell/download-sql-server-ps-module) *for funciton that interact with sql server*
+ - [SqlServer](https://docs.microsoft.com/en-us/sql/powershell/download-sql-server-ps-module) *for funcitons that interact with sql server*
 
 
 
 
 ## Formaters
 
-The **Format-*Noun*** functions primary goal is to deliver rich & robust formatting. This often involves using Regular Expressions under the hood to travers complex patterns. All formatters should be able handle complex edge cases. 
+The **Format-*Noun*** functions primary goal is to deliver rich & robust formatting. This often involves using Regular Expressions under the hood to travers complex patterns. All formatters should be able to handle complex edge cases. 
+
+The **InputObject** of the **Format-*Noun*** Functions will be transformed and sanatized and then returned as a valid *string* representation appropriate for the intended datatype. Powershells allows for easy convertions to a more specific datatype afterwards.
 
 
 #### *Format-Percent*
@@ -79,12 +81,9 @@ Format-EmailAddress 'bad data    SoMe.cOmPlEx_name@sub.domain.com    more bad da
 # returns some.complex_name@sub.domain.com
 ```
 
-The **InputObject** of the **Format-*Noun*** Functions will be transformed and sanatized and then returned as a valid *string* representation appropriate for the intended datatype. Powershells allows for easy convertions to a more specific datatype afterwards.
-
-
 
 ## Database
-powershell has gotten a bit better at interacting with Sql Server but wouldn't it be awesome if you could just define a sql server objects with just hashtables and arrays?
+Powershell has gotten a bit better at interacting with Sql Server but wouldn't it be awesome if you could define a sql objects with just hashtables and arrays?
 
 #### *ConvertTo-DataRows*
 ```powershell
@@ -153,7 +152,7 @@ Out-Hash 'SHA512 this please' -Algorithm SHA512 -OutputAs byte
 
 
 #### *Out-Unique* 
-Arrays does not need to be sorted.
+Arrays don't need to be sorted.
 ```powershell
 Out-Unique @( 'b','a','b','a', 'A' )
 # returns b, a, A
