@@ -362,6 +362,14 @@ function ConvertTo-PhoneNumber {
 }
 
 
+function Format-PhoneNumber {
+    [cmdletbinding()]
+    param([parameter(Mandatory,ValueFromPipeline)][PhoneNumber]$InputObject)
+    process{
+        return $InputObject.ToString()
+    }
+}
+
 function New-Password {
     <#
     .SYNOPSIS
